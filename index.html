@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calcolatore impasto pizza</title>
+<style>
+  :root {
+    --bg: #faf7f2; --surface: #ffffff; --text: #22201c; --muted: #6b655c; --line: #e4ddd2;
+    --accent: #b5462b; --accent-soft: #f6e4dc; --warn: #8a5a00; --warn-bg: #fff4d6;
+    --ph-mix: #8d8f86; --ph-bulk: #e07a2e; --ph-ball: #b5462b; --ph-preCold: #c49c66; --ph-cold: #6f9bb0;
+    --ph-out: #d9b06d; --ph-proof: #d9b06d; --ph-bake: #b5462b;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #171614; --surface: #211f1c; --text: #eee9e1; --muted: #a59e93; --line: #3a3631;
+      --accent: #e0775b; --accent-soft: #3a2620; --warn: #f0c060; --warn-bg: #3a3020;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #171614; --surface: #211f1c; --text: #eee9e1; --muted: #a59e93; --line: #3a3631;
+    --accent: #e0775b; --accent-soft: #3a2620; --warn: #f0c060; --warn-bg: #3a3020;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 680px; margin: 0 auto; padding: 28px 16px 64px; }
+  h1 { font-size: 1.55rem; margin: 0 0 4px; }
+  h2 { font-size: 1.1rem; margin: 0 0 14px; }
+  h3 { font-size: 1rem; margin: 0; }
+  .sub { color: var(--muted); margin: 0 0 22px; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px; margin: 0 0 14px; }
+  .label { display: block; font-size: .8rem; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin: 0 0 8px; }
+  .row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+  .row + .row, .row + .label, .chips + .label, .chips + .row, .row + .switch { margin-top: 16px; }
+  label.field { display: flex; flex-direction: column; gap: 5px; font-size: .88rem; color: var(--muted); min-width: 0; }
+  input, select { font: inherit; color: var(--text); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 9px 11px; width: 100%; min-width: 0; }
+  input:focus-visible, select:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chips label { position: relative; display: inline-flex; align-items: center; border: 1px solid var(--line); border-radius: 999px; padding: 7px 14px; cursor: pointer; font-size: .93rem; background: var(--bg); }
+  .chips label:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+  .chips input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; pointer-events: none; }
+  .chips label:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .switch { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+  .switch input { width: 20px; height: 20px; accent-color: var(--accent); margin: 0; }
+  .hint { color: var(--muted); font-size: .82rem; margin: 10px 0 0; }
+  details.more > summary { cursor: pointer; font-weight: 600; list-style: none; display: flex; justify-content: space-between; align-items: center; }
+  details.more > summary::-webkit-details-marker { display: none; }
+  details.more > summary::after { content: "+"; color: var(--accent); font-size: 1.3rem; line-height: 1; }
+  details.more[open] > summary::after { content: "–"; }
+  details.more > summary small { display: block; font-weight: 400; color: var(--muted); font-size: .82rem; margin-top: 2px; }
+  details.more[open] > summary { margin-bottom: 16px; }
+  .group { border-top: 1px solid var(--line); padding-top: 14px; margin-top: 16px; }
+  button { font: inherit; border: 0; border-radius: 12px; cursor: pointer; }
+  .primary { background: var(--accent); color: #fff; font-weight: 650; padding: 14px 18px; width: 100%; font-size: 1.02rem; }
+  .ghost { background: transparent; color: var(--accent); border: 1px solid var(--accent); padding: 7px 14px; font-size: .9rem; }
+  .error { color: var(--accent); font-size: .9rem; margin: 10px 0 0; }
+  .warn { background: var(--warn-bg); color: var(--warn); border-radius: 10px; padding: 9px 12px; margin: 0 0 10px; font-size: .92rem; }
+  .info { background: var(--bg); border-left: 3px solid var(--ph-cold); border-radius: 0 10px 10px 0; padding: 9px 12px; margin: 14px 0 0; font-size: .9rem; color: var(--muted); }
+  .info b { color: var(--text); }
+  .slider { margin-top: 16px; }
+  .flour-field { margin-top: 16px; }
+  .slider-top { display: flex; justify-content: space-between; align-items: baseline; font-size: .88rem; color: var(--muted); }
+  .slider-top output { color: var(--text); font-weight: 700; font-size: 1.05rem; font-variant-numeric: tabular-nums; }
+  .slider input[type=range] { padding: 0; border: 0; background: transparent; accent-color: var(--accent); height: 28px; }
+  .slider-scale { display: flex; justify-content: space-between; color: var(--muted); font-size: .75rem; margin-top: -2px; }
+  .slider .hint { margin-top: 4px; }
+  .slider .hint.over { color: var(--warn); }
+  .split { margin-top: 14px; background: var(--accent-soft); border-radius: 10px; padding: 10px 12px; }
+  .split output { display: block; font-size: 1.15rem; font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; }
+  .split span { display: block; color: var(--muted); font-size: .84rem; }
+  .split.off span { color: var(--warn); }
+
+  /* schermata 2 */
+  .summary { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+  .summary h2 { margin: 0 0 8px; font-size: 1.25rem; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tags span { background: var(--accent-soft); border-radius: 999px; padding: 3px 10px; font-size: .82rem; }
+  .ing { border-bottom: 1px solid var(--line); }
+  .ing > summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; padding: 11px 0; align-items: baseline; }
+  .ing > summary::-webkit-details-marker { display: none; }
+  .ing-name { font-weight: 600; }
+  .ing-name::after { content: " ⓘ"; color: var(--muted); font-weight: 400; font-size: .8rem; }
+  .ing-g { font-size: 1.15rem; font-weight: 700; font-variant-numeric: tabular-nums; text-align: right; }
+  .ing-meta { grid-column: 1 / -1; color: var(--muted); font-size: .84rem; }
+  .ing-why { color: var(--muted); font-size: .9rem; padding: 0 0 12px; }
+  .ing-why b { color: var(--text); font-weight: 600; }
+  .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; margin-top: 14px; }
+  .fact { background: var(--bg); border-radius: 10px; padding: 9px 11px; }
+  .fact b { display: block; font-size: 1.02rem; }
+  .fact span { color: var(--muted); font-size: .78rem; }
+  .bar { display: flex; height: 12px; border-radius: 6px; overflow: hidden; background: var(--line); }
+  .bar i { display: block; min-width: 3px; }
+  .bar-legend { display: flex; justify-content: space-between; color: var(--muted); font-size: .8rem; margin: 6px 0 4px; }
+  ol.plan { list-style: none; margin: 10px 0 0; padding: 0; }
+  ol.plan > li { position: relative; display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 12px; padding: 12px 0 14px; }
+  ol.plan > li:not(:last-child)::before { content: ""; position: absolute; left: 10px; top: 30px; bottom: -6px; width: 2px; background: var(--line); }
+  .dot { width: 22px; height: 22px; border-radius: 50%; background: var(--c, var(--accent)); margin-top: 1px; }
+  .ph-top { display: flex; justify-content: space-between; gap: 10px; font-variant-numeric: tabular-nums; }
+  .ph-when { color: var(--accent); font-weight: 650; font-size: .92rem; }
+  .ph-dur { color: var(--muted); font-size: .88rem; white-space: nowrap; }
+  .cue { color: var(--muted); font-size: .9rem; margin: 3px 0 0; }
+  .ph details { margin-top: 8px; font-size: .92rem; }
+  .ph details summary { cursor: pointer; color: var(--accent); }
+  .ph details ol { margin: 8px 0 0; padding-left: 20px; }
+  .ph details li { margin: 4px 0; }
+  .why { color: var(--muted); border-left: 3px solid var(--line); padding-left: 10px; margin: 10px 0 0; }
+  .measure { display: flex; flex-wrap: wrap; align-items: end; gap: 8px; background: var(--accent-soft); border-radius: 10px; padding: 10px 12px; margin-top: 10px; }
+  .measure label { flex: 1 1 200px; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<main>
+
+  <!-- SCHERMATA 1: impostazioni -->
+  <section id="setup">
+    <h1>Calcolatore impasto pizza</h1>
+    <p class="sub">Dimmi cosa vuoi fare e quando vuoi infornare: ti preparo dosi e tabella di marcia.</p>
+
+    <form id="f" novalidate onsubmit="return false">
+      <div class="card">
+        <span class="label">Che pizza</span>
+        <div class="chips" id="styles"></div>
+        <span class="label">Impastatrice</span>
+        <div class="chips" id="machines"></div>
+        <label class="field flour-field">Farina<select name="flour" id="flour"></select></label>
+        <div class="row" data-show="manualFlour" style="margin-top:12px">
+          <label class="field">Forza W<input name="w" type="number" min="100" max="450" step="10" placeholder="es. 280" inputmode="numeric"></label>
+          <label class="field">Assorbimento % (facoltativo)<input name="absorption" type="number" min="45" max="95" step="0.5" placeholder="da scheda tecnica" inputmode="decimal"></label>
+        </div>
+        <div class="slider">
+          <div class="slider-top"><span>Idratazione</span><output id="hydration-out"></output></div>
+          <input type="range" name="hydration" step="1" aria-label="Idratazione (%)">
+          <div class="slider-scale"><span id="hydration-min"></span><span id="hydration-max"></span></div>
+          <p class="hint" id="hydration-hint"></p>
+        </div>
+      </div>
+
+      <div class="card">
+        <span class="label">Tempi e temperature</span>
+        <div class="row">
+          <label class="field">Inizio impasto<input name="start" type="datetime-local"></label>
+          <label class="field">Infornata<input name="bakeAt" type="datetime-local"></label>
+        </div>
+        <div class="row">
+          <label class="field">Temperatura ambiente (°C)<input name="room" type="number" min="10" max="35" step="0.5" value="22" inputmode="decimal"></label>
+          <label class="field">Temperatura acqua (°C)<input name="waterTemp" type="number" min="0" max="40" step="0.5" value="4" inputmode="decimal"></label>
+        </div>
+        <label class="switch" style="margin-top:16px"><input type="checkbox" name="fridge" checked> Maturazione in frigorifero</label>
+        <div class="row" data-show="fridge" style="margin-top:12px">
+          <label class="field">Temperatura frigo (°C)<input name="fridgeTemp" type="number" min="1" max="10" step="0.5" value="4" inputmode="decimal"></label>
+        </div>
+        <p class="hint" id="time-hint"></p>
+      </div>
+
+      <details class="card more" id="more">
+        <summary><span>Altre impostazioni<small id="more-summary"></small></span></summary>
+
+        <span class="label">Ingredienti</span>
+          <div class="row">
+            <label class="field">Sale (%)<input name="salt" type="number" min="0" max="4" step="0.1" inputmode="decimal"></label>
+            <label class="field">Olio (%)<input name="oil" type="number" min="0" max="10" step="0.5" inputmode="decimal"></label>
+            <label class="field">Farina (°C)<input name="flourTemp" type="number" min="5" max="35" step="0.5" value="22" inputmode="decimal"></label>
+          </div>
+          <div class="row">
+            <label class="field">Lievito<select name="yeastType" id="yeastType"></select></label>
+          </div>
+      </details>
+
+      <div class="card">
+        <span class="label">Quanta</span>
+        <div class="chips" id="basis">
+          <label><input type="radio" name="quantityBasis" value="count" checked>Numero di panetti</label>
+          <label><input type="radio" name="quantityBasis" value="flour">Kg di farina</label>
+        </div>
+        <div class="row">
+          <label class="field" data-show="flourKg">Farina (kg)<input name="flourKg" type="number" min="0.25" max="10" step="0.05" value="1" inputmode="decimal"></label>
+          <label class="field" data-show="countIn">Panetti<input name="count" type="number" min="1" max="60" step="1" value="6" inputmode="numeric"></label>
+          <label class="field" data-show="tray">Lato corto teglia (cm)<input name="trayWidth" type="number" min="10" max="60" value="30" inputmode="numeric"></label>
+          <label class="field" data-show="tray">Lato lungo teglia (cm)<input name="trayLength" type="number" min="10" max="80" value="40" inputmode="numeric"></label>
+          <label class="field" data-show="tray">Teglie<input name="trays" type="number" min="1" max="6" value="1" inputmode="numeric"></label>
+        </div>
+        <label class="switch" data-show="equal" style="margin-top:14px"><input type="checkbox" name="equal" checked> Dividi tutto in panetti uguali</label>
+        <div class="slider" data-show="ball">
+          <div class="slider-top"><span>Peso panetto</span><output id="ball-out"></output></div>
+          <input type="range" name="ball" step="5" aria-label="Peso panetto (g)">
+          <div class="slider-scale"><span id="ball-min"></span><span id="ball-max"></span></div>
+        </div>
+        <div class="split" data-show="split" aria-live="polite">
+          <output id="split-out"></output>
+          <span id="split-note"></span>
+        </div>
+        <p class="hint" id="qty-hint"></p>
+      </div>
+
+      <button type="submit" class="primary">Calcola l’impasto</button>
+      <p class="error" id="setup-error" hidden></p>
+    </form>
+  </section>
+
+  <!-- SCHERMATA 2: risultato -->
+  <section id="result" hidden>
+    <div class="card summary">
+      <div>
+        <h2 id="sum-title"></h2>
+        <div class="tags" id="sum-tags"></div>
+      </div>
+      <button type="button" class="ghost" id="edit">Modifica</button>
+    </div>
+
+    <div id="alerts"></div>
+
+    <div class="card">
+      <h2>Dosi</h2>
+      <div id="ingredients"></div>
+      <div class="facts" id="facts"></div>
+      <p class="info" id="ice-tip" hidden></p>
+    </div>
+
+    <div class="card">
+      <h2>Tabella di marcia</h2>
+      <div class="bar" id="bar" aria-hidden="true"></div>
+      <div class="bar-legend"><span id="bar-from"></span><span id="bar-to"></span></div>
+      <ol class="plan" id="plan"></ol>
+    </div>
+  </section>
+</main>
+
+<!-- il ?v= va cambiato quando cambia model.js, così il browser non usa una copia vecchia -->
+<script src="model.js?v=2026-11-12"></script>
+<script>
+(() => {
+  'use strict';
+  const M = window.DoughModel, f = document.getElementById('f'), $ = id => document.getElementById(id);
+  const STORE = 'pizza-dough-calculator:v2';
+  const nf = (n, d = 1) => Number(n).toLocaleString('it-IT', { maximumFractionDigits: d });
+  const grams = n => nf(n, n < 10 ? 2 : 0);
+  const local = d => new Date(d - d.getTimezoneOffset() * 60e3).toISOString().slice(0, 16);
+  const day = ms => new Date(ms).toLocaleDateString('it-IT', { weekday: 'short', day: 'numeric', month: 'short' });
+  const clock = ms => new Date(ms).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
+  const when = ms => `${day(ms)} · ${clock(ms)}`;
+  const dur = h => { const m = Math.round(h * 60); return m < 60 ? m + ' min' : Math.floor(m / 60) + ' h' + (m % 60 ? ' ' + (m % 60) + ' min' : ''); };
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+  /* ---------- schermata 1 ---------- */
+
+  const chips = (id, name, entries, checked) => $(id).innerHTML = entries.map(([v, l]) =>
+    `<label><input type="radio" name="${name}" value="${v}"${v === checked ? ' checked' : ''}>${esc(l)}</label>`).join('');
+  chips('styles', 'style', Object.entries(M.STYLES).map(([k, s]) => [k, s.label]), 'classic');
+  chips('machines', 'machine', Object.entries(M.MACHINES).map(([k, m]) => [k, m.label]), 'planetary');
+  // menu farine raggruppato per marca, più l'inserimento manuale in fondo
+  const brands = new Map();
+  for (const [k, fl] of Object.entries(M.FLOURS)) {
+    const brand = fl.brand || 'Farine';
+    if (!brands.has(brand)) brands.set(brand, []);
+    brands.get(brand).push([k, fl]);
+  }
+  for (const [brand, list] of brands) {
+    const g = document.createElement('optgroup'); g.label = brand;
+    for (const [k, fl] of list) g.append(new Option(`${fl.name || fl.label || k} · W${fl.w}`, k));
+    $('flour').append(g);
+  }
+  $('flour').append(new Option('Altra farina: inserisci il W', 'manual'));
+  $('flour').value = 'nuvola';
+  for (const [k, y] of Object.entries(M.YEAST_TYPES)) $('yeastType').add(new Option(y.label, k));
+
+  const isTeglia = () => f.style.value === 'teglia';
+  const equalSplit = () => !isTeglia() && f.quantityBasis.value === 'flour' && f.equal.checked;
+
+  // farina scelta: preimpostata (W noto) oppure inserita a mano
+  function flour() {
+    const preset = M.FLOURS[f.flour.value];
+    if (preset) return { w: preset.w, absorption: null, flourLabel: preset.label };
+    const w = parseFloat(f.w.value), a = parseFloat(f.absorption.value);
+    return { w: w > 0 ? w : null, absorption: a > 0 ? a : null, flourLabel: null };
+  }
+
+  // gli slider prendono il range dello stile; il massimo dell'idratazione è il più basso
+  // tra stile, impastatrice e farina
+  function setRanges() {
+    const st = M.STYLES[f.style.value];
+    const set = (name, lo, hi, unit) => {
+      f[name].min = lo; f[name].max = hi;
+      $(name + '-min').textContent = lo + unit; $(name + '-max').textContent = hi + unit;
+    };
+    const lim = M.hydrationLimit({ style: f.style.value, machine: f.machine.value, ...flour() });
+    set('hydration', lim.min, Math.max(lim.min, lim.max), '%');
+    if (st.ballRange) set('ball', ...st.ballRange, ' g');
+    return lim;
+  }
+
+  function applyStyleDefaults() {
+    const d = M.defaults(f.style.value);
+    setRanges();
+    f.hydration.value = d.hydration; // il browser lo riporta dentro il massimo consentito
+    f.salt.value = d.salt; f.oil.value = d.oil;
+    if (d.ball) f.ball.value = d.ball;
+  }
+
+  function syncSetup() {
+    const t = isTeglia(), basis = f.quantityBasis.value, eq = equalSplit();
+    const show = {
+      flourKg: !t && basis === 'flour', countIn: !t && basis === 'count', equal: !t && basis === 'flour',
+      ball: !t && !eq, split: eq, tray: t, fridge: f.fridge.checked, manualFlour: f.flour.value === 'manual',
+    };
+    document.querySelectorAll('[data-show]').forEach(e => e.hidden = !show[e.dataset.show]);
+    $('basis').hidden = t;
+    const st = M.STYLES[f.style.value], mc = M.MACHINES[f.machine.value];
+    const lim = setRanges();
+    const h = +f.hydration.value, salt = +f.salt.value, oil = +f.oil.value;
+
+    $('hydration-out').textContent = `${nf(h)}%`;
+    $('ball-out').textContent = `${f.ball.value} g`;
+    $('hydration-hint').textContent = lim.tooWeak
+      ? `Questa farina regge circa il ${lim.max}% d’acqua, meno del minimo per ${st.label} (${lim.min}%): meglio una farina più forte.`
+      : `Massimo ${lim.max}%: ${lim.by}.` + (f.flour.value === 'manual' && !flour().w && !flour().absorption ? ' Inserisci il W per tenere conto della farina.' : '');
+    $('hydration-hint').classList.toggle('over', lim.tooWeak);
+
+    // cosa viene fuori dalla farina scelta: l'impasto pesa farina + acqua + sale + olio + lievito
+    let qty = '';
+    const kg = +f.flourKg.value;
+    if (eq && kg > 0) {
+      const s = M.equalSplit({ style: f.style.value, flourKg: kg, hydration: h, salt, oil });
+      const [lo, hi] = st.ballRange;
+      $('split-out').textContent = `${s.count} ${s.count > 1 ? 'panetti' : 'panetto'} da ${Math.round(s.ball)} g`;
+      $('split-note').textContent = s.inRange
+        ? `${grams(s.dough)} g di impasto in parti uguali (range ${lo}–${hi} g).`
+        : `${grams(s.dough)} g di impasto: troppo poco per stare nel range ${lo}–${hi} g, aumenta la farina.`;
+      $('split-out').parentElement.classList.toggle('off', !s.inRange);
+    } else if (!t && basis === 'flour' && kg > 0) {
+      const dough = kg * 1000 * (1 + (h + salt + oil) / 100);
+      const n = Math.floor(dough / +f.ball.value), left = Math.round(dough - n * +f.ball.value);
+      qty = `${n} panetti da ${f.ball.value} g` + (left > 0 ? `, avanzano ${left} g.` : '.');
+    }
+    $('qty-hint').textContent = qty; $('qty-hint').hidden = !qty;
+
+    const w = f.fridge.checked ? st.fridgeWindow : st.roomWindow;
+    $('time-hint').textContent = `${st.label} ${f.fridge.checked ? 'con' : 'senza'} frigo: ${w[0]}–${w[1]} ore dall’inizio all’infornata.`;
+    $('more-summary').textContent = [
+      `sale ${nf(salt)}%`, oil ? `olio ${nf(oil)}%` : 'senza olio', M.YEAST_TYPES[f.yeastType.value].label.toLowerCase(),
+    ].join(' · ');
+  }
+
+  function readInput() {
+    const n = name => parseFloat(f[name].value);
+    const start = new Date(f.start.value).getTime(), bake = new Date(f.bakeAt.value).getTime();
+    return {
+      style: f.style.value, machine: f.machine.value,
+      quantityBasis: isTeglia() ? 'tray' : f.quantityBasis.value, count: n('count'), ball: n('ball'), flourKg: n('flourKg'),
+      division: f.equal.checked ? 'equal' : 'fixed', trayWidth: n('trayWidth'), trayLength: n('trayLength'), trays: n('trays'),
+      hydration: n('hydration'), salt: n('salt'), oil: n('oil'), flourTemp: n('flourTemp'), ...flour(), yeastType: f.yeastType.value,
+      start, hours: (bake - start) / 3600e3, fridge: f.fridge.checked, room: n('room'), fridgeTemp: n('fridgeTemp'), waterTemp: n('waterTemp'),
+    };
+  }
+
+  function validate(p) {
+    if (!Number.isFinite(p.hours)) return 'Inserisci inizio e ora dell’infornata.';
+    if (p.hours < 2) return 'L’infornata deve essere almeno 2 ore dopo l’inizio dell’impasto.';
+    const needed = isTeglia() ? ['trayWidth', 'trayLength', 'trays']
+      : p.quantityBasis === 'flour' ? (p.division === 'equal' ? ['flourKg'] : ['flourKg', 'ball']) : ['count', 'ball'];
+    for (const k of [...needed, 'hydration', 'salt', 'oil', 'room', 'flourTemp', 'waterTemp'])
+      if (!Number.isFinite(p[k]) || p[k] < 0) return 'Controlla le quantità e le temperature: c’è un valore mancante.';
+    return null;
+  }
+
+  // Le impostazioni restano salvate in questo browser; gli orari ripartono dalla prossima ora piena.
+  function save() {
+    try {
+      const data = Object.fromEntries([...f.elements].filter(e => e.name && !['start', 'bakeAt'].includes(e.name) && (e.type !== 'radio' || e.checked))
+        .map(e => [e.name, e.type === 'checkbox' ? e.checked : e.value]));
+      data.duration = (new Date(f.bakeAt.value) - new Date(f.start.value)) / 3600e3;
+      localStorage.setItem(STORE, JSON.stringify(data));
+    } catch {}
+  }
+  function restore() {
+    let data = null;
+    try { data = JSON.parse(localStorage.getItem(STORE)); } catch {}
+    const start = new Date(); start.setMinutes(0, 0, 0); start.setHours(start.getHours() + 1);
+    f.start.value = local(start);
+    f.bakeAt.value = local(new Date(+start + (data?.duration > 0 ? data.duration : 24) * 3600e3));
+    if (!data) { applyStyleDefaults(); return; }
+    const assign = ([k, v]) => {
+      const el = f.elements[k];
+      if (!el) return;
+      if (el instanceof RadioNodeList) { const r = [...el].find(x => x.value === v); if (r) r.checked = true; }
+      else if (el.type === 'checkbox') el.checked = !!v;
+      else el.value = v;
+    };
+    Object.entries(data).forEach(assign);
+    // gli slider vanno riletti dopo aver impostato il range dello stile salvato
+    setRanges();
+    Object.entries(data).filter(([k]) => f.elements[k]?.type === 'range').forEach(assign);
+  }
+
+  /* ---------- schermata 2 ---------- */
+
+  let input = null, measured = null;
+
+  function render() {
+    const p = { ...input, ...(measured != null ? { measuredDoughTemp: measured } : {}) };
+    const r = M.calculate(p), st = M.STYLES[p.style], mc = M.MACHINES[p.machine];
+
+    $('sum-title').textContent = st.label;
+    const qty = p.style === 'teglia'
+      ? `${r.dough.count} ${r.dough.count > 1 ? 'teglie' : 'teglia'} ${p.trayWidth}×${p.trayLength} cm`
+      : `${r.dough.count} panetti da ${r.dough.ball} g`;
+    $('sum-tags').innerHTML = [
+      qty, `idratazione ${nf(p.hydration)}%`, mc.label, p.fridge ? `frigo ${nf(p.fridgeTemp)} °C` : 'senza frigo',
+      `ambiente ${nf(p.room)} °C`, `acqua ${nf(p.waterTemp)} °C`, `${when(r.start)} → ${when(r.end)}`,
+    ].map(t => `<span>${esc(t)}</span>`).join('');
+
+    $('alerts').innerHTML = r.alerts.map(a => `<p class="warn">${esc(a)}</p>`).join('');
+
+    // dosi
+    const I = M.INGREDIENTS, why = k => `<div class="ing-why"><b>${esc(I[k].role)}.</b> ${esc(I[k].detail)}</div>`;
+    const yeast = M.YEAST_TYPES[p.yeastType];
+    const rows = [
+      ['flour', p.flourLabel ? `Farina ${p.flourLabel.replace('Caputo ', '')}` : 'Farina', r.grams.flour, '100%' + (p.w ? ` · W${p.w}` : '')],
+      ['water', 'Acqua', r.grams.water, `${nf(p.hydration)}% · a ${nf(r.waterTemp)} °C`],
+      ['yeast', yeast.label, r.grams.yeast, `${nf(r.percent.yeast, 3)}%` + (p.yeastType === 'fresh' ? ` · oppure ${grams(r.grams.yeast / 2)} g di lievito secco` : '')],
+      ['salt', 'Sale', r.grams.salt, `${nf(p.salt)}%`],
+      ...(r.grams.oil > 0 ? [['oil', 'Olio', r.grams.oil, `${nf(p.oil)}%`]] : []),
+    ];
+    $('ingredients').innerHTML = rows.map(([k, name, g, meta]) => `
+      <details class="ing"><summary><span class="ing-name">${esc(name)}</span><span class="ing-g">${grams(g)} g</span><span class="ing-meta">${esc(meta)}</span></summary>${why(k)}</details>`).join('');
+    const used = r.finalDoughTemp.used;
+    $('facts').innerHTML = [
+      [`${grams(r.dough.total)} g`, 'impasto totale' + (r.dough.leftover > 0 ? ` (avanzo ${r.dough.leftover} g)` : '')],
+      [`≈ ${nf(used)} °C`, measured != null ? 'impasto misurato' : 'impasto a fine lavorazione'],
+      [`W${r.strength[0]}–${r.strength[1]}`, 'farina consigliata'],
+    ].map(([v, l]) => `<div class="fact"><b>${v}</b><span>${esc(l)}</span></div>`).join('');
+    // infobox, non un'opzione: dosi e tempi sono già calcolati con l'acqua che usi
+    $('ice-tip').hidden = !(r.iceTip && measured == null);
+    if (r.iceTip) $('ice-tip').innerHTML = `Con acqua a ${nf(r.waterTemp)} °C l’impasto chiude a circa ${nf(r.doughFromWater)} °C, sopra i ${r.iceTip.fdtMax} °C consigliati: dosi e tempi sono già calcolati così. Se preferisci un impasto più fresco, <b>sostituisci ${grams(r.iceTip.grams)} g d’acqua con ghiaccio tritato</b>, poi scrivi la temperatura misurata in “Impasta”: i tempi si adattano.`;
+
+    // tabella di marcia
+    const timed = r.phases.filter(ph => ph.hours > 0);
+    $('bar').innerHTML = timed.map(ph => `<i style="flex:${ph.hours} 1 0;background:var(--ph-${ph.id})" title="${esc(ph.title)} · ${dur(ph.hours)}"></i>`).join('');
+    $('bar-from').textContent = when(r.start);
+    $('bar-to').textContent = when(r.end);
+    $('plan').innerHTML = r.phases.map(ph => `
+      <li class="ph">
+        <span class="dot" style="--c:var(--ph-${ph.id})"></span>
+        <div>
+          <div class="ph-top"><span class="ph-when">${when(ph.from)}</span>${ph.hours > 0 ? `<span class="ph-dur">${dur(ph.hours)}</span>` : ''}</div>
+          <h3>${esc(ph.title)}</h3>
+          ${ph.cue ? `<p class="cue">${esc(ph.cue)}</p>` : ''}
+          ${ph.id === 'mix' ? `<div class="measure"><label class="field">Hai finito di impastare? Temperatura misurata (°C)<input id="measured" type="number" min="10" max="40" step="0.1" inputmode="decimal" placeholder="${nf(r.finalDoughTemp.used)}" value="${measured ?? ''}"></label>${measured != null ? '<button type="button" class="ghost" id="clear-measured">Annulla</button>' : ''}</div>` : ''}
+          <details><summary>Cosa fare e perché</summary>
+            ${ph.steps.length ? `<ol>${ph.steps.map(s => `<li>${esc(s)}</li>`).join('')}</ol>` : ''}
+            ${ph.why ? `<p class="why">${esc(ph.why)}</p>` : ''}
+          </details>
+        </div>
+      </li>`).join('') +
+      (r.estimatedBake ? `<li><span></span><p class="warn">Con questa temperatura sarà pronto intorno a ${when(r.estimatedBake)}.</p></li>` : '');
+  }
+
+  // la temperatura misurata ridisegna il risultato senza perdere il campo attivo
+  $('plan').addEventListener('input', e => {
+    if (e.target.id !== 'measured') return;
+    const v = parseFloat(e.target.value);
+    measured = Number.isFinite(v) && v >= 10 && v <= 40 ? v : null;
+    render();
+    const el = $('measured'); el.focus(); el.value = e.target.value;
+  });
+  $('plan').addEventListener('click', e => { if (e.target.id === 'clear-measured') { measured = null; render(); } });
+
+  /* ---------- navigazione ---------- */
+
+  function show(view) {
+    $('setup').hidden = view !== 'setup';
+    $('result').hidden = view !== 'result';
+    window.scrollTo({ top: 0 });
+  }
+
+  f.addEventListener('submit', e => {
+    e.preventDefault();
+    const p = readInput(), err = validate(p);
+    $('setup-error').hidden = !err; $('setup-error').textContent = err || '';
+    if (err) return;
+    input = p; measured = null;
+    save(); render(); show('result');
+  });
+  $('edit').onclick = () => show('setup');
+  f.addEventListener('change', e => { if (e.target.name === 'style') applyStyleDefaults(); syncSetup(); });
+  f.addEventListener('input', syncSetup);
+
+  restore();
+  syncSetup();
+})();
+</script>
+</body>
+</html>
