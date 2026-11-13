@@ -1,5 +1,5 @@
 ---
-name: Impasto pizza
+name: Pizza Pronta
 description: Dosi e procedimento dell'impasto per pizza, dipinti come l'insegna e il listino di una pizzeria napoletana.
 colors:
   tomato-enamel: "#a8231b"
@@ -158,7 +158,7 @@ components:
     padding: "10px 12px"
 ---
 
-# Design System: Impasto pizza
+# Design System: Pizza Pronta
 
 ## Overview
 

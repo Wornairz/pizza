@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <title>Impasto pizza</title>
+  <title>Pizza Pronta</title>
   <!-- fondo insegna: smalto rosso con filo oro -->
   <rect width="512" height="512" rx="112" fill="#a8231b"/>
   <rect x="22" y="22" width="468" height="468" rx="94" fill="none" stroke="#d6a142" stroke-width="8"/>

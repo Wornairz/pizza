@@ -5,7 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#a8231b">
-<title>Impasto pizza</title>
+<title>Pizza Pronta</title>
+<meta name="apple-mobile-web-app-title" content="Pizza Pronta">
+<meta name="application-name" content="Pizza Pronta">
 <meta name="description" content="Dosi e procedimento dell’impasto per pizza fino all’infornata.">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -143,6 +145,13 @@
   .about summary::-webkit-details-marker { display: none; }
   .about ul { margin: 0; padding-left: 20px; }
   .about li { margin: 6px 0; }
+  /* su telefono le colonne si sciolgono: ordine Che pizza, Quando, Quantità, Altre impostazioni */
+  .col { display: contents; }
+  #setup .card[aria-labelledby="h-pizza"] { order: 1; }
+  #setup .card[aria-labelledby="h-when"] { order: 2; }
+  #setup .card[aria-labelledby="h-qty"] { order: 3; }
+  #setup .more { order: 4; }
+  #setup .span { order: 5; }
   @media (min-width: 900px) {
     #setup .wrap { grid-template-columns: 1fr 1fr; align-items: start; }
     #setup .span { grid-column: 1 / -1; }
@@ -285,7 +294,7 @@
 <section id="setup">
   <header class="sign"><div class="sign-in">
     <img class="logo" src="icon.svg" alt="" width="54" height="54">
-    <div class="grow"><h1 class="script" id="setup-title" tabindex="-1">Impasto pizza</h1><p class="tagline">Dosi e procedimento fino all’infornata</p></div>
+    <div class="grow"><h1 class="script" id="setup-title" tabindex="-1">Pizza Pronta</h1><p class="tagline">Dosi e procedimento fino all’infornata</p></div>
   </div></header>
 
   <form id="f" class="wrap" novalidate onsubmit="return false">
@@ -309,6 +318,15 @@
         </div>
         <div class="weak" id="weak" hidden role="status"></div>
       </section>
+
+      <details class="card more">
+        <summary><span>Altre impostazioni<small id="more-summary"></small></span><svg class="chev" aria-hidden="true"><use href="#i-chev"/></svg></summary>
+        <div class="row">
+          <label class="field">Sale (%)<input name="salt" type="number" min="0" max="4" step="0.1" inputmode="decimal"></label>
+          <label class="field">Olio (%)<input name="oil" type="number" min="0" max="10" step="0.5" inputmode="decimal"></label>
+          <label class="field">Lievito<select name="yeastType" id="yeastType"></select></label>
+        </div>
+      </details>
     </div>
 
     <div class="col">
@@ -356,14 +374,6 @@
         <p class="hint" id="qty-hint"></p>
       </section>
 
-      <details class="card more">
-        <summary><span>Altre impostazioni<small id="more-summary"></small></span><svg class="chev" aria-hidden="true"><use href="#i-chev"/></svg></summary>
-        <div class="row">
-          <label class="field">Sale (%)<input name="salt" type="number" min="0" max="4" step="0.1" inputmode="decimal"></label>
-          <label class="field">Olio (%)<input name="oil" type="number" min="0" max="10" step="0.5" inputmode="decimal"></label>
-          <label class="field">Lievito<select name="yeastType" id="yeastType"></select></label>
-        </div>
-      </details>
     </div>
 
     <div class="span go-wrap">
@@ -803,7 +813,8 @@
     const { phases, r } = current, t = Date.now();
     const rel = ms => { const m = Math.round((ms - t) / MIN); return m < 60 ? `tra ${m} min` : m < 1440 ? `tra ${dur(m / 60)}` : `tra ${Math.round(m / 1440)} ${Math.round(m / 1440) === 1 ? 'giorno' : 'giorni'}`; };
     let text;
-    if (t < r.start) text = `Si comincia<span>${esc(when(r.start))} · ${rel(r.start)}</span>`;
+    // prima dell'inizio: corto, la data solo se non è oggi (sul telefono la targa resta bassa)
+    if (t < r.start) text = `Inizio alle ${clock(r.start)}<span>${dayKey(r.start) === dayKey(t) ? '' : esc(dayShort(r.start)) + ' · '}${rel(r.start)}</span>`;
     else if (t >= r.end) text = `Tutto pronto<span>buona pizza</span>`;
     else {
       const ph = phases.find(x => x.hours > 0 && t >= x.from && t < x.to) || phases[0];

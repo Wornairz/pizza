@@ -1,6 +1,6 @@
 {
-  "name": "Impasto pizza",
-  "short_name": "Impasto",
+  "name": "Pizza Pronta",
+  "short_name": "Pizza Pronta",
   "description": "Dosi e procedimento dell'impasto per pizza fino all'infornata.",
   "lang": "it",
   "start_url": "./",

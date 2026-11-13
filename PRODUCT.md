@@ -56,7 +56,7 @@ Il flusso ha due schermate: una per le impostazioni e una con il riassunto delle
 
 ## Brand Commitments
 
-Nome: "Impasto pizza". Identità visiva: l'insegna dipinta di una pizzeria napoletana (rosso pomodoro, filo oro, verde basilico, scritta dipinta), scelta dall'utente il 2026-11-13; il dettaglio è in DESIGN.md.
+Nome: "Pizza Pronta" (scelto dall'utente il 2026-11-13; prima "Impasto pizza"). Identità visiva: l'insegna dipinta di una pizzeria napoletana (rosso pomodoro, filo oro, verde basilico, scritta dipinta), scelta dall'utente il 2026-11-13; il dettaglio è in DESIGN.md.
 
 Icona: una pizza napoletana vista dall'alto dentro una piastrella rossa con filo oro (`icon.svg`, più i PNG per la schermata Home).
 

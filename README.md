@@ -1,6 +1,8 @@
-# Calcolatore impasto pizza
+# Pizza Pronta
 
-Calcola dosi e tabella di marcia per l'impasto della pizza: stile, impastatrice, farina,
+Calcolatore dell’impasto per pizza.
+
+Calcola dosi e procedimento per l'impasto della pizza: stile, impastatrice, farina,
 idratazione, temperatura dell'acqua, maturazione in frigorifero e orario di infornata.
 
 Pagina statica, senza build: `index.html` (interfaccia) e `model.js` (modello di calcolo).
