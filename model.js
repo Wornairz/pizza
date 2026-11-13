@@ -34,23 +34,28 @@
    */
   const STYLES = {
     classic: {
-      label: 'Napoletana classica', hydration: 60, hydrationRange: [58, 65], salt: 3.0, oil: 0, ball: 270, ballRange: [260, 280],
+      desc: 'Quella del disciplinare: cornicione alto e soffice, centro sottile e morbido che si piega a libretto. Solo farina, acqua, sale e lievito, cotta 60–90 secondi a 430–480 °C.',
+      label: 'Napoletana classica', tagline: 'Cornicione alto', hydration: 60, hydrationRange: [58, 65], salt: 3.0, oil: 0, ball: 270, ballRange: [260, 280],
       fdt: [24, 26], roomWindow: [6, 24], fridgeWindow: [12, 72],
     },
     contemporary: {
-      label: 'Napoletana contemporanea', hydration: 72, hydrationRange: [65, 80], salt: 2.8, oil: 0, ball: 280, ballRange: [260, 300],
+      desc: 'Più acqua e maturazioni lunghe: cornicione molto gonfio, alveolato e leggero, centro morbido. Vuole una farina forte e più attenzione in impasto.',
+      label: 'Napoletana contemporanea', tagline: 'Cornicione gonfio e alveolato', hydration: 72, hydrationRange: [65, 80], salt: 2.8, oil: 0, ball: 280, ballRange: [260, 300],
       fdt: [23, 25], roomWindow: [6, 24], fridgeWindow: [12, 72],
     },
     roman: {
-      label: 'Tonda romana', hydration: 56, hydrationRange: [50, 60], salt: 2.5, oil: 4, ball: 180, ballRange: [160, 200],
+      desc: 'Sottilissima e scrocchiarella, quasi senza cornicione: poca acqua e olio nell’impasto, si stende col mattarello e cuoce più a lungo finché è croccante.',
+      label: 'Tonda romana', tagline: 'Scrocchiarella', hydration: 56, hydrationRange: [50, 60], salt: 2.5, oil: 4, ball: 180, ballRange: [160, 200],
       fdt: [22, 26], roomWindow: [6, 12], fridgeWindow: [12, 48],
     },
     standard: {
-      label: 'Pizza classica', hydration: 63, hydrationRange: [60, 65], salt: 3.0, oil: 4, ball: 250, ballRange: [240, 260],
+      desc: 'La tonda da pizzeria del resto d’Italia: più bassa e uniforme della napoletana, un filo d’olio nell’impasto, cottura più lunga e ben dorata. Va bene anche nel forno di casa.',
+      label: 'Pizza classica', tagline: 'Bassa e dorata', hydration: 63, hydrationRange: [60, 65], salt: 3.0, oil: 4, ball: 250, ballRange: [240, 260],
       fdt: [25, 28], roomWindow: [5, 12], fridgeWindow: [12, 72],
     },
     teglia: {
-      label: 'Teglia romana', hydration: 78, hydrationRange: [70, 85], salt: 2.4, oil: 2.5, ball: null, ballRange: null,
+      desc: 'Alta, croccante sotto e piena di bolle dentro: impasto molto idratato con pieghe, steso con le dita nella teglia unta e cotto nel forno di casa.',
+      label: 'Teglia romana', tagline: 'Alta, in teglia', hydration: 78, hydrationRange: [70, 85], salt: 2.4, oil: 2.5, ball: null, ballRange: null,
       // la struttura si fa con bassinage e pieghe, non con la sola macchina
       machineMax: { spiral: 85, planetary: 85, hand: 85 },
       fdt: [18, 22], roomWindow: [4, 12], fridgeWindow: [18, 48],

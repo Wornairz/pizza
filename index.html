@@ -81,7 +81,18 @@
   :root[data-theme="dark"] .lbl { color: #8fc7a3; }
   .card > fieldset:first-of-type .lbl, .card h2 + .lbl { margin-top: 0; }
   .chips { display: flex; flex-wrap: wrap; gap: 8px; }
-  .chips .br { flex-basis: 100%; height: 0; margin-top: -8px; }
+  /* stili come voci di listino: nome e una riga che dice com'è; due colonne, la contemporanea da sola in mezzo */
+  .chips.tiles { display: grid; grid-template-columns: 1fr 1fr; }
+  .chips.tiles label { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 2px; min-height: 60px; padding: 9px 14px; border-radius: 14px; line-height: 1.2; }
+  .chips.tiles label.wide { grid-column: 1 / -1; }
+  .chips.tiles small { font: 500 .82rem/1.25 var(--sans); color: var(--muted); }
+  .chips.tiles label:has(input:checked) small { color: var(--gold-soft); }
+  .style-more { border-bottom: 1px dashed var(--line); }
+  .style-more > summary { list-style: none; cursor: pointer; display: flex; align-items: baseline; gap: 8px; padding: 9px 0; min-height: 44px; font: 600 1rem var(--sans); color: var(--muted); }
+  .style-more > summary::-webkit-details-marker { display: none; }
+  .style-more > summary .chev { width: 16px; height: 16px; align-self: center; color: var(--muted); }
+  .style-more p { margin: 0 0 12px; font-size: .93rem; color: var(--muted); }
+  .style-more p b { color: var(--ink); font-weight: 600; }
   .chips label { position: relative; display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; border: 1.5px solid var(--line-strong); border-radius: 999px; font: 600 .95rem var(--sans); background: var(--paper); cursor: pointer; transition: background-color .15s, border-color .15s, color .15s; }
   .chips label:hover { border-color: var(--red); }
   .chips label:has(input:checked) { background: var(--red); border-color: var(--red); color: #fff; }
@@ -297,7 +308,7 @@
     <div class="col">
       <section class="card" aria-labelledby="h-pizza">
         <h2 class="script" id="h-pizza">Che pizza</h2>
-        <fieldset><legend class="lbl">Stile</legend><div class="chips" id="styles"></div></fieldset>
+        <fieldset><legend class="lbl">Stile</legend><div class="chips tiles" id="styles"></div></fieldset>
         <fieldset><legend class="lbl">Impastatrice</legend><div class="chips" id="machines"></div></fieldset>
         <label class="lbl" for="flour">Farina</label>
         <select name="flour" id="flour" class="flour" aria-describedby="flour-hint"></select>
@@ -412,6 +423,7 @@
       <h2 class="script" id="h-dosi">Dosi</h2>
       <div id="ingredients"></div>
       <div class="facts" id="facts"></div>
+      <details class="style-more" id="style-more"></details>
       <p class="ice" id="ice-tip" hidden></p>
     </section>
     <section class="proc" id="procedimento" aria-labelledby="h-proc">
@@ -423,7 +435,7 @@
 </section>
 
 <!-- il ?v= va cambiato quando cambia model.js, così il browser non usa una copia vecchia -->
-<script src="model.js?v=2026-11-13"></script>
+<script src="model.js?v=2026-11-13d"></script>
 <script>
 (() => {
   'use strict';
@@ -448,10 +460,10 @@
 
   /* ---------- schermata 1 ---------- */
 
-  // una voce null manda a capo: gli stili si leggono a coppie (napoletane, contemporanea, romane)
-  const chips = (id, name, entries, checked) => $(id).innerHTML = entries.map(e => !e ? '<span class="br" aria-hidden="true"></span>' : (([v, l]) =>
-    `<label><input type="radio" name="${name}" value="${v}"${v === checked ? ' checked' : ''}>${esc(l)}</label>`)(e)).join('');
-  chips('styles', 'style', ['classic', 'standard', null, 'contemporary', null, 'roman', 'teglia'].map(k => k && [k, M.STYLES[k].label]), 'classic');
+  const chips = (id, name, entries, checked) => $(id).innerHTML = entries.map(([v, l, sub, cls]) =>
+    `<label${cls ? ` class="${cls}"` : ''}><input type="radio" name="${name}" value="${v}"${v === checked ? ' checked' : ''}>${esc(l)}${sub ? `<small>${esc(sub)}</small>` : ''}</label>`).join('');
+  // a coppie: le due tonde, la contemporanea da sola, le due romane
+  chips('styles', 'style', ['classic', 'standard', 'contemporary', 'roman', 'teglia'].map(k => [k, M.STYLES[k].label, M.STYLES[k].tagline, k === 'contemporary' && 'wide']), 'classic');
   chips('machines', 'machine', Object.entries(M.MACHINES).map(([k, m]) => [k, m.label]), 'planetary');
   // menu farine raggruppato per marca, più l'inserimento manuale in fondo
   const brands = new Map();
@@ -754,6 +766,7 @@
       ['Impasto totale' + (r.dough.leftover > 0 ? ` (avanzo ${r.dough.leftover} g)` : ''), `${grams(r.dough.total)} g`],
       [measured != null ? 'Impasto misurato' : 'Fine impasto', `≈ ${nf(r.finalDoughTemp.used)} °C`],
     ].map(([l, v]) => `<div class="tot"><span>${esc(l)}</span><span class="dots" aria-hidden="true"></span><b>${v}</b></div>`).join('');
+    $('style-more').innerHTML = `<summary><span>Com’è la ${esc(st.label)}</span><span class="dots" aria-hidden="true"></span>${chev}</summary><p>${esc(st.desc)} <b>Col frigo:</b> da ${st.fridgeWindow[0]} a ${st.fridgeWindow[1]}\u00a0ore.</p>`;
     $('ice-tip').hidden = !(r.iceTip && measured == null);
     if (r.iceTip) $('ice-tip').innerHTML = `Con acqua a ${nf(r.waterTemp)} °C l’impasto chiude a circa ${nf(r.doughFromWater)} °C, sopra i ${r.iceTip.fdtMax} °C consigliati. Se preferisci un impasto più fresco, <b>sostituisci ${grams(r.iceTip.grams)} g d’acqua con ghiaccio tritato</b> e scrivi la temperatura misurata in “Impasta”: i tempi si adattano.`;
 
