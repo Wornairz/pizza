@@ -1,0 +1,808 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-13T09:00:59Z",
+  "title": "Design System: Impasto pizza",
+  "extensions": {
+    "colorMeta": {
+      "tomato-enamel": {
+        "role": "primary",
+        "displayName": "Smalto pomodoro",
+        "canonical": "#a8231b",
+        "tonalRamp": [
+          "#2b0000",
+          "#560000",
+          "#840907",
+          "#b13328",
+          "#d16356",
+          "#f09082",
+          "#f0c5be",
+          "#ffe3dc"
+        ]
+      },
+      "oxblood-shade": {
+        "role": "primary",
+        "displayName": "Ombra sangue di bue",
+        "canonical": "#6e140f",
+        "tonalRamp": [
+          "#280000",
+          "#500000",
+          "#78231c",
+          "#984d43",
+          "#b8756b",
+          "#d79e95",
+          "#f0c5bf",
+          "#ffe4de"
+        ]
+      },
+      "gold-pinstripe": {
+        "role": "tertiary",
+        "displayName": "Filo oro",
+        "canonical": "#d6a142",
+        "tonalRamp": [
+          "#150800",
+          "#362200",
+          "#5b3f06",
+          "#835f1a",
+          "#ad802f",
+          "#d8a446",
+          "#e3cead",
+          "#ffebca"
+        ]
+      },
+      "gold-leaf-soft": {
+        "role": "tertiary",
+        "displayName": "Foglia d'oro tenue",
+        "canonical": "#f3d9a0",
+        "tonalRamp": [
+          "#0e0b05",
+          "#2c2618",
+          "#4d442f",
+          "#726548",
+          "#988762",
+          "#c1ac7e",
+          "#e0cfac",
+          "#fdedc9"
+        ]
+      },
+      "basil": {
+        "role": "secondary",
+        "displayName": "Verde basilico",
+        "canonical": "#1f5a3a",
+        "tonalRamp": [
+          "#001102",
+          "#003018",
+          "#185133",
+          "#407354",
+          "#6a957a",
+          "#94b8a1",
+          "#bcdac6",
+          "#ddf6e5"
+        ]
+      },
+      "basil-wash": {
+        "role": "secondary",
+        "displayName": "Verde basilico lavato",
+        "canonical": "#e6efe9",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#252726",
+          "#434644",
+          "#636764",
+          "#858b87",
+          "#a9b0ab",
+          "#cbd3ce",
+          "#e8f1eb"
+        ]
+      },
+      "on-basil-muted": {
+        "role": "secondary",
+        "displayName": "Verde chiaro su basilico",
+        "canonical": "#d3e4d9",
+        "tonalRamp": [
+          "#0a0c0a",
+          "#242825",
+          "#414743",
+          "#606863",
+          "#818c85",
+          "#a4b2a9",
+          "#c6d6cb",
+          "#e3f3e9"
+        ]
+      },
+      "warm-ink": {
+        "role": "neutral",
+        "displayName": "Inchiostro caldo",
+        "canonical": "#1e1a16",
+        "tonalRamp": [
+          "#0e0a07",
+          "#2a2621",
+          "#494440",
+          "#6a6560",
+          "#8d8883",
+          "#b2ada7",
+          "#d5d0ca",
+          "#f3ede8"
+        ]
+      },
+      "smoke-muted": {
+        "role": "neutral",
+        "displayName": "Fumo",
+        "canonical": "#5f5a52",
+        "tonalRamp": [
+          "#0d0b07",
+          "#292620",
+          "#49443d",
+          "#6a655e",
+          "#8d8881",
+          "#b1ada7",
+          "#d4d0cb",
+          "#f1eeea"
+        ]
+      },
+      "rule-line": {
+        "role": "neutral",
+        "displayName": "Riga",
+        "canonical": "#e2ddd5",
+        "tonalRamp": [
+          "#0c0b0a",
+          "#272624",
+          "#464542",
+          "#686662",
+          "#8c8983",
+          "#b1ada7",
+          "#d5d0c9",
+          "#f3eee6"
+        ]
+      },
+      "rule-strong": {
+        "role": "neutral",
+        "displayName": "Riga forte",
+        "canonical": "#9c9488",
+        "tonalRamp": [
+          "#0d0b07",
+          "#292620",
+          "#49443d",
+          "#6b655c",
+          "#90887d",
+          "#b4ada2",
+          "#d7d0c6",
+          "#f4eee5"
+        ]
+      },
+      "leader-gold": {
+        "role": "neutral",
+        "displayName": "Puntini oro",
+        "canonical": "#c9b48e",
+        "tonalRamp": [
+          "#0f0a04",
+          "#2d2518",
+          "#4e4431",
+          "#72644c",
+          "#988769",
+          "#bfab87",
+          "#e1cfac",
+          "#feeccc"
+        ]
+      },
+      "enamel-white": {
+        "role": "neutral",
+        "displayName": "Smalto bianco",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#262626",
+          "#454545",
+          "#666666",
+          "#898989",
+          "#aeaeae",
+          "#d1d1d1",
+          "#eeeeee"
+        ]
+      },
+      "tile-wash": {
+        "role": "neutral",
+        "displayName": "Grigio piastrella",
+        "canonical": "#f4f4f2",
+        "tonalRamp": [
+          "#0b0b0a",
+          "#262625",
+          "#454543",
+          "#666664",
+          "#898987",
+          "#aeaeac",
+          "#d1d1cf",
+          "#eeeeec"
+        ]
+      },
+      "warn-umber": {
+        "role": "neutral",
+        "displayName": "Avviso",
+        "canonical": "#7a4d00",
+        "tonalRamp": [
+          "#1b0400",
+          "#3d1d00",
+          "#633b00",
+          "#875c20",
+          "#a88151",
+          "#c9a77f",
+          "#e6ccae",
+          "#ffeace"
+        ]
+      },
+      "warn-wash": {
+        "role": "neutral",
+        "displayName": "Fondo avviso",
+        "canonical": "#fff1cc",
+        "tonalRamp": [
+          "#0c0b08",
+          "#292620",
+          "#49453a",
+          "#6c6656",
+          "#918973",
+          "#b7ad93",
+          "#dcd0b0",
+          "#fceec9"
+        ]
+      },
+      "late-umber": {
+        "role": "neutral",
+        "displayName": "Ritardo",
+        "canonical": "#5a3a00",
+        "tonalRamp": [
+          "#190500",
+          "#3a2000",
+          "#5d3e07",
+          "#7d6038",
+          "#9e8462",
+          "#c0aa8d",
+          "#e0ceb7",
+          "#fbecd9"
+        ]
+      },
+      "phase-mix": {
+        "role": "phase",
+        "displayName": "Fase impasto",
+        "canonical": "#77796f",
+        "tonalRamp": [
+          "#0b0c08",
+          "#262722",
+          "#44463f",
+          "#65675e",
+          "#888a81",
+          "#adafa6",
+          "#d0d2ca",
+          "#eeefe9"
+        ]
+      },
+      "phase-bulk": {
+        "role": "phase",
+        "displayName": "Fase puntata",
+        "canonical": "#d4701f",
+        "tonalRamp": [
+          "#1f0100",
+          "#461500",
+          "#703000",
+          "#9d4d00",
+          "#cd6b1b",
+          "#f09456",
+          "#ecc9b3",
+          "#ffe6d0"
+        ]
+      },
+      "phase-ball": {
+        "role": "phase",
+        "displayName": "Fase staglio"
+      },
+      "phase-precold": {
+        "role": "phase",
+        "displayName": "Fase prima del frigo",
+        "canonical": "#c99a12",
+        "tonalRamp": [
+          "#150800",
+          "#362200",
+          "#5b4000",
+          "#826000",
+          "#ac8200",
+          "#d4a735",
+          "#e0cfac",
+          "#feedc9"
+        ]
+      },
+      "phase-cold": {
+        "role": "phase",
+        "displayName": "Fase frigo",
+        "canonical": "#3f86ad",
+        "tonalRamp": [
+          "#000d1c",
+          "#002a3f",
+          "#144b66",
+          "#2e6d90",
+          "#4f92b7",
+          "#7eb6d8",
+          "#b2d7ee",
+          "#cff5ff"
+        ]
+      },
+      "phase-proof": {
+        "role": "phase",
+        "displayName": "Fase fuori frigo e appretto",
+        "canonical": "#5e8c3a",
+        "tonalRamp": [
+          "#021000",
+          "#152e00",
+          "#2f4f11",
+          "#4b732a",
+          "#6c984b",
+          "#94bc79",
+          "#c4d9b7",
+          "#e1f6d4"
+        ]
+      },
+      "phase-bake": {
+        "role": "phase",
+        "displayName": "Fase infornata"
+      },
+      "ink-dark": {
+        "role": "neutral",
+        "displayName": "Inchiostro chiaro (scuro)",
+        "canonical": "#f1ece4",
+        "tonalRamp": [
+          "#0c0b0a",
+          "#272625",
+          "#464542",
+          "#686662",
+          "#8c8984",
+          "#b1ada7",
+          "#d5d0c9",
+          "#f3eee6"
+        ]
+      },
+      "muted-dark": {
+        "role": "neutral",
+        "displayName": "Fumo chiaro (scuro)",
+        "canonical": "#b3aca1",
+        "tonalRamp": [
+          "#0c0b08",
+          "#292622",
+          "#48443f",
+          "#6a655e",
+          "#8e887f",
+          "#b4ada2",
+          "#d6d0c6",
+          "#f3eee5"
+        ]
+      },
+      "paper-dark": {
+        "role": "neutral",
+        "displayName": "Bruno fumo",
+        "canonical": "#221e1a",
+        "tonalRamp": [
+          "#0e0a07",
+          "#2a2621",
+          "#494440",
+          "#6a6560",
+          "#8d8883",
+          "#b2ada8",
+          "#d5d0ca",
+          "#f3ede8"
+        ]
+      },
+      "wash-dark": {
+        "role": "neutral",
+        "displayName": "Bruno forno",
+        "canonical": "#171411",
+        "tonalRamp": [
+          "#0d0b08",
+          "#292623",
+          "#484441",
+          "#696561",
+          "#8c8884",
+          "#b1ada9",
+          "#d4d0cc",
+          "#f2eee9"
+        ]
+      },
+      "line-dark": {
+        "role": "neutral",
+        "displayName": "Riga (scuro)",
+        "canonical": "#36312b",
+        "tonalRamp": [
+          "#0e0a07",
+          "#2a2620",
+          "#49443e",
+          "#6a6560",
+          "#8c8884",
+          "#b1ada9",
+          "#d3d0cd",
+          "#f0eeec"
+        ]
+      },
+      "line-strong-dark": {
+        "role": "neutral",
+        "displayName": "Riga forte (scuro)"
+      },
+      "leader-dark": {
+        "role": "neutral",
+        "displayName": "Puntini (scuro)"
+      },
+      "basil-wash-dark": {
+        "role": "secondary",
+        "displayName": "Basilico lavato (scuro)",
+        "canonical": "#1d2a22",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#252726",
+          "#434644",
+          "#636764",
+          "#858b87",
+          "#a9b0ab",
+          "#cbd3ce",
+          "#e8f1eb"
+        ]
+      },
+      "warn-dark": {
+        "role": "neutral",
+        "displayName": "Avviso (scuro)"
+      },
+      "warn-wash-dark": {
+        "role": "neutral",
+        "displayName": "Fondo avviso (scuro)",
+        "canonical": "#3a2e14",
+        "tonalRamp": [
+          "#0c0b08",
+          "#292620",
+          "#49453a",
+          "#6c6656",
+          "#918973",
+          "#b7ad93",
+          "#dcd0b0",
+          "#fceec9"
+        ]
+      },
+      "tomato-on-dark": {
+        "role": "primary",
+        "displayName": "Pomodoro su scuro",
+        "canonical": "#f08a72",
+        "tonalRamp": [
+          "#1a0301",
+          "#401910",
+          "#693327",
+          "#95503f",
+          "#c46e59",
+          "#f38e77",
+          "#f0c6bc",
+          "#ffe3d9"
+        ]
+      },
+      "basil-on-dark": {
+        "role": "secondary",
+        "displayName": "Basilico su scuro",
+        "canonical": "#8fc7a3",
+        "tonalRamp": [
+          "#040e07",
+          "#182b1f",
+          "#314c3b",
+          "#4c7059",
+          "#699579",
+          "#87bd9a",
+          "#b8dbc3",
+          "#d5f9e1"
+        ]
+      },
+      "phase-mix-dark": {
+        "role": "phase",
+        "displayName": "Fase impasto (tema scuro)",
+        "canonical": "#9a9c93",
+        "tonalRamp": [
+          "#0b0c08",
+          "#262722",
+          "#44463f",
+          "#65675e",
+          "#888a81",
+          "#adafa6",
+          "#d0d2ca",
+          "#eeefe9"
+        ]
+      },
+      "phase-bulk-dark": {
+        "role": "phase",
+        "displayName": "Fase puntata (tema scuro)",
+        "canonical": "#ec8b45",
+        "tonalRamp": [
+          "#1f0100",
+          "#461500",
+          "#703000",
+          "#9d4d00",
+          "#cd6b1b",
+          "#f09456",
+          "#ecc9b3",
+          "#ffe6d0"
+        ]
+      },
+      "phase-ball-dark": {
+        "role": "phase",
+        "displayName": "Fase staglio (tema scuro)"
+      },
+      "phase-precold-dark": {
+        "role": "phase",
+        "displayName": "Fase prima del frigo (tema scuro)",
+        "canonical": "#e2bb4a",
+        "tonalRamp": [
+          "#150800",
+          "#362200",
+          "#5b4000",
+          "#826000",
+          "#ac8200",
+          "#d4a735",
+          "#e0cfac",
+          "#feedc9"
+        ]
+      },
+      "phase-cold-dark": {
+        "role": "phase",
+        "displayName": "Fase frigo (tema scuro)",
+        "canonical": "#6fb0d0",
+        "tonalRamp": [
+          "#000d1c",
+          "#002a3f",
+          "#144b66",
+          "#2e6d90",
+          "#4f92b7",
+          "#7eb6d8",
+          "#b2d7ee",
+          "#cff5ff"
+        ]
+      },
+      "phase-proof-dark": {
+        "role": "phase",
+        "displayName": "Fase fuori frigo e appretto (tema scuro)",
+        "canonical": "#8fbd6c",
+        "tonalRamp": [
+          "#021000",
+          "#152e00",
+          "#2f4f11",
+          "#4b732a",
+          "#6c984b",
+          "#94bc79",
+          "#c4d9b7",
+          "#e1f6d4"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Insegna",
+        "purpose": "Titolo dipinto dell'insegna; 2rem su telefono, 1.75rem sotto 480px, 3.25rem da 900px."
+      },
+      "headline": {
+        "displayName": "Titolo di sezione",
+        "purpose": "Titoli di scheda e sezione in pomodoro; la chiusura a 2rem."
+      },
+      "plaque": {
+        "displayName": "Targa",
+        "purpose": "Ora dell'infornata nella targa e scritta del bottone dipinto (1.4rem)."
+      },
+      "title": {
+        "displayName": "Nome",
+        "purpose": "Nome della fase e dell'ingrediente."
+      },
+      "body": {
+        "displayName": "Testo",
+        "purpose": "Testo corrente e spiegazioni; controlli in 600."
+      },
+      "numeral": {
+        "displayName": "Grammi",
+        "purpose": "Quantità del listino; totali 1.3rem, valore del range 1.9rem."
+      },
+      "time": {
+        "displayName": "Orario",
+        "purpose": "Targhetta dell'orario di fase."
+      },
+      "label": {
+        "displayName": "Etichetta",
+        "purpose": "Etichette di campo, intestazioni di giorno, etichetta della targa, sottotitolo dell'insegna; maiuscolo, unità sempre minuscole."
+      }
+    },
+    "shadows": [
+      {
+        "name": "sign-band",
+        "value": "inset 0 -9px 0 #6e140f",
+        "purpose": "Fascia dipinta alla base dell'insegna."
+      },
+      {
+        "name": "sign-script-shade",
+        "value": "text-shadow: 2px 2px 0 #6e140f (3px da 900px)",
+        "purpose": "Ombreggiatura dipinta del titolo sull'insegna; solo lì."
+      },
+      {
+        "name": "painted-button",
+        "value": "0 10px 22px -12px rgb(110 20 15 / .75)",
+        "purpose": "Bottone dipinto a riposo; hover 0 14px 26px -12px /.8, premuto 0 6px 14px -10px /.8."
+      },
+      {
+        "name": "plaque",
+        "value": "0 8px 18px -14px rgb(0 0 0 / .6)",
+        "purpose": "Stacca la targa fissa dal contenuto che scorre."
+      },
+      {
+        "name": "range-thumb",
+        "value": "0 2px 4px rgb(0 0 0 / .2)",
+        "purpose": "Cursore del range."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out-soft",
+        "value": "cubic-bezier(.2, .8, .2, 1)",
+        "purpose": "Interruttore (.2s), freccia delle sezioni (.25s), lampo dei tempi ricalcolati (1.6s)."
+      },
+      {
+        "name": "control-fade",
+        "value": ".15s",
+        "purpose": "Colori dei chip."
+      },
+      {
+        "name": "press",
+        "value": ".12s",
+        "purpose": "Bottone dipinto: hover e pressione."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "none",
+        "purpose": "Con prefers-reduced-motion tutte le animazioni e transizioni si spengono."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "phone-small",
+        "value": "max-width: 480px"
+      },
+      {
+        "name": "desktop",
+        "value": "min-width: 900px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Bottone dipinto",
+      "kind": "button",
+      "refersTo": "button-painted",
+      "description": "L'azione principale delle impostazioni: un pezzo d'insegna a tutta larghezza.",
+      "html": "<button class=\"ds-go\">Calcola l’impasto</button>",
+      "css": ".ds-go{display:block;width:100%;min-height:58px;border:2px solid var(--gold,#d6a142);border-radius:16px;background:var(--red,#a8231b);color:#fff;font:400 1.4rem Shrikhand,Georgia,serif;cursor:pointer;box-shadow:0 10px 22px -12px rgb(110 20 15 / .75);transition:transform .12s,box-shadow .12s,background-color .12s}.ds-go:hover{background:#b92a20;box-shadow:0 14px 26px -12px rgb(110 20 15 / .8)}.ds-go:active{transform:translateY(1px);box-shadow:0 6px 14px -10px rgb(110 20 15 / .8)}.ds-go:focus-visible{outline:3px solid var(--gold,#d6a142);outline-offset:3px}"
+    },
+    {
+      "name": "Insegna",
+      "kind": "custom",
+      "refersTo": "button-sign",
+      "description": "Testata smaltata con filo oro, titolo dipinto, sottotitolo e bottone Modifica.",
+      "html": "<header class=\"ds-sign\"><div class=\"ds-sign-in\"><div class=\"ds-grow\"><h1 class=\"ds-sign-title\">Napoletana classica</h1><p class=\"ds-tagline\">6 panetti × 270 g · 60%</p></div><button type=\"button\" class=\"ds-btn-sign\">Modifica</button></div></header>",
+      "css": ".ds-sign{position:relative;background:var(--red,#a8231b);color:#fff;border-bottom:5px solid var(--gold,#d6a142);box-shadow:inset 0 -9px 0 var(--red-deep,#6e140f)}.ds-sign::before{content:\"\";position:absolute;inset:7px 7px 16px;border:1.5px solid rgb(214 161 66 / .75);border-radius:12px;pointer-events:none}.ds-sign-in{position:relative;display:flex;align-items:flex-start;gap:14px;padding:18px 16px 26px}.ds-grow{flex:1;min-width:0}.ds-sign-title{margin:0;font:400 2rem/1.2 Shrikhand,Georgia,serif;text-shadow:2px 2px 0 var(--red-deep,#6e140f)}.ds-tagline{margin:6px 0 0;font:600 1.05rem/1.35 'Barlow Condensed','Arial Narrow',sans-serif;letter-spacing:.03em;color:var(--gold-soft,#f3d9a0)}.ds-btn-sign{flex:none;border:1.5px solid var(--gold-soft,#f3d9a0);color:#fff;background:transparent;border-radius:999px;padding:0 16px;min-height:44px;font:600 .95rem Barlow,system-ui,sans-serif;cursor:pointer}.ds-btn-sign:hover{background:rgb(255 255 255 / .1)}.ds-btn-sign:focus-visible{outline:3px solid var(--gold,#d6a142);outline-offset:2px}"
+    },
+    {
+      "name": "Targa",
+      "kind": "custom",
+      "refersTo": "plaque",
+      "description": "Tavoletta basilico fissa con l'ora dell'infornata e la fase in corso.",
+      "html": "<div class=\"ds-plaque\"><div><small>Si inforna</small><b class=\"ds-when\">sab 14 nov · 20:00</b></div><p class=\"ds-now\"><i style=\"--c:#3f86ad\"></i>Ora: Frigorifero<span>fino alle 16:00</span></p></div>",
+      "css": ".ds-plaque{display:flex;align-items:center;gap:12px;padding:10px 12px 10px 14px;border-radius:12px;border:2px solid var(--gold,#d6a142);background:var(--basil,#1f5a3a);color:#fff;box-shadow:0 8px 18px -14px rgb(0 0 0 / .6)}.ds-plaque small{display:block;font:700 .8rem 'Barlow Condensed','Arial Narrow',sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-soft,#f3d9a0)}.ds-when{font:400 1.3rem/1.2 Shrikhand,Georgia,serif;white-space:nowrap}.ds-now{margin:0 0 0 auto;text-align:right;font:700 1rem/1.25 'Barlow Condensed','Arial Narrow',sans-serif}.ds-now span{display:block;font:500 .9rem/1.3 Barlow,system-ui,sans-serif;color:var(--on-basil-muted,#d3e4d9)}.ds-now i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;background:var(--c);box-shadow:0 0 0 2px rgb(255 255 255 / .6);vertical-align:1px}"
+    },
+    {
+      "name": "Listino delle dosi",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Ingredienti con puntini di guida e grammi tabellari, chiusi dai totali.",
+      "html": "<section class=\"ds-board\"><h2>Dosi</h2><div class=\"ds-ing\"><span class=\"ds-n\">Farina<em>Caputo Pizzeria</em></span><span class=\"ds-dots\"></span><span class=\"ds-g\">1000 g</span></div><div class=\"ds-ing\"><span class=\"ds-n\">Acqua<em>dal frigo, 4 °C</em></span><span class=\"ds-dots\"></span><span class=\"ds-g\">600 g</span></div><div class=\"ds-tot\"><span>Impasto totale</span><span class=\"ds-dots\"></span><b>1630 g</b></div></section>",
+      "css": ".ds-board{background:var(--paper,#fff);color:var(--ink,#1e1a16);border:1px solid var(--line,#e2ddd5);border-radius:14px;padding:8px 18px 14px;font:16px/1.5 Barlow,system-ui,sans-serif}.ds-board h2{margin:8px 0 2px;font:400 1.5rem/1.2 Shrikhand,Georgia,serif;color:var(--red,#a8231b)}.ds-ing,.ds-tot{display:flex;align-items:baseline;gap:8px;border-bottom:1px dashed var(--line,#e2ddd5)}.ds-ing{padding:12px 0;min-height:64px}.ds-n{font:700 1.1rem/1.25 Barlow,system-ui,sans-serif}.ds-n em{display:block;font:500 .85rem/1.35 Barlow,system-ui,sans-serif;font-style:normal;color:var(--muted,#5f5a52)}.ds-dots{flex:1;min-width:14px;border-bottom:2px dotted var(--leader,#c9b48e);transform:translateY(-7px)}.ds-g{font:800 2.15rem/1 'Barlow Condensed','Arial Narrow',sans-serif;font-variant-numeric:tabular-nums;white-space:nowrap}.ds-tot{padding:9px 0;border-bottom:0;font:600 1rem Barlow,system-ui,sans-serif;color:var(--muted,#5f5a52)}.ds-tot .ds-dots{transform:translateY(-5px)}.ds-tot b{font:800 1.3rem/1 'Barlow Condensed','Arial Narrow',sans-serif;color:var(--ink,#1e1a16);font-variant-numeric:tabular-nums}"
+    },
+    {
+      "name": "Lavagna del procedimento",
+      "kind": "custom",
+      "refersTo": "step-now",
+      "description": "Una lavagna per giorno: targhetta oraria tinta di fase, riga in corso basilico da bordo a bordo.",
+      "html": "<h3 class=\"ds-day\">Venerdì 13 novembre</h3><ol class=\"ds-steps\"><li class=\"ds-step ds-done\" style=\"--c:#77796f\"><span class=\"ds-t\">18:00</span><h4>Impasto</h4><span class=\"ds-dots\"></span><span class=\"ds-d\">1 h 5 min</span></li><li class=\"ds-step ds-now\" style=\"--c:#d4701f;--c-ink:#1e1a16\"><span class=\"ds-t\">19:05</span><h4>Puntata<span class=\"ds-badge\">ORA</span></h4><span class=\"ds-dots\"></span><span class=\"ds-d\">2 h</span><p class=\"ds-cue\">Copri la ciotola e lascia riposare.</p></li><li class=\"ds-step\" style=\"--c:#a8231b\"><span class=\"ds-t\">21:05</span><h4>Staglio</h4><span class=\"ds-dots\"></span><span class=\"ds-d\">15 min</span></li></ol>",
+      "css": ".ds-day{display:flex;align-items:center;gap:10px;margin:0 0 8px;font:700 .95rem 'Barlow Condensed','Arial Narrow',sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--basil,#1f5a3a)}.ds-day::after{content:\"\";flex:1;border-top:2px solid var(--gold,#d6a142)}.ds-steps{list-style:none;margin:0;padding:4px 14px;background:var(--paper,#fff);color:var(--ink,#1e1a16);border:1px solid var(--line,#e2ddd5);border-radius:14px;overflow:hidden;font:16px/1.5 Barlow,system-ui,sans-serif}.ds-step{display:grid;grid-template-columns:62px auto minmax(14px,1fr) auto;gap:2px 10px;align-items:baseline;padding:12px 0;border-bottom:1px dashed var(--line,#e2ddd5)}.ds-step:last-child{border-bottom:0}.ds-t{justify-self:start;padding:2px 7px;border-radius:8px;background:color-mix(in srgb,var(--c) 40%,#fff);font:800 1.2rem/1.2 'Barlow Condensed','Arial Narrow',sans-serif;font-variant-numeric:tabular-nums}.ds-step h4{margin:0;font:700 1.12rem/1.3 Barlow,system-ui,sans-serif}.ds-dots{border-bottom:2px dotted var(--leader,#c9b48e);transform:translateY(-6px)}.ds-d{font:700 1.05rem 'Barlow Condensed','Arial Narrow',sans-serif;color:var(--muted,#5f5a52);white-space:nowrap}.ds-cue{grid-column:2/-1;margin:0;font-size:.92rem;color:var(--muted,#5f5a52)}.ds-now{margin:0 -14px;padding:12px 14px;border:0;border-block:2px solid var(--gold,#d6a142);background:var(--basil,#1f5a3a);color:#fff}.ds-now .ds-t{background:var(--c);color:var(--c-ink,#fff)}.ds-now .ds-d{color:var(--gold-soft,#f3d9a0)}.ds-now .ds-cue{color:var(--on-basil-muted,#d3e4d9)}.ds-now+.ds-step{border-top:0}.ds-done h4,.ds-done .ds-d,.ds-done .ds-t{color:var(--muted,#5f5a52)}.ds-done .ds-t{background:transparent;box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--c) 45%,transparent)}.ds-badge{display:inline-block;margin-left:8px;padding:1px 7px;border-radius:6px;background:var(--gold,#d6a142);color:#1e1a16;font:800 .75rem 'Barlow Condensed',sans-serif;letter-spacing:.08em;vertical-align:3px}"
+    },
+    {
+      "name": "Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Scelta singola a pillola; selezionata diventa pomodoro pieno.",
+      "html": "<div class=\"ds-chips\"><label class=\"ds-chip\"><input type=\"radio\" name=\"ds-s\" checked>Napoletana classica</label><label class=\"ds-chip\"><input type=\"radio\" name=\"ds-s\">Tonda romana</label></div>",
+      "css": ".ds-chips{display:flex;flex-wrap:wrap;gap:8px}.ds-chip{position:relative;display:inline-flex;align-items:center;min-height:44px;padding:0 16px;border:1.5px solid var(--line-strong,#9c9488);border-radius:999px;font:600 .95rem Barlow,system-ui,sans-serif;background:var(--paper,#fff);color:var(--ink,#1e1a16);cursor:pointer;transition:background-color .15s,border-color .15s,color .15s}.ds-chip:hover{border-color:var(--red,#a8231b)}.ds-chip:has(input:checked){background:var(--red,#a8231b);border-color:var(--red,#a8231b);color:#fff}.ds-chip input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0}.ds-chip:has(input:focus-visible){outline:3px solid var(--focus,#1f5a3a);outline-offset:2px}"
+    },
+    {
+      "name": "Campo",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Campo numerico con etichetta sopra; errore in famiglia avviso.",
+      "html": "<label class=\"ds-field\">Ambiente (°C)<input class=\"ds-input\" type=\"number\" value=\"22\"></label>",
+      "css": ".ds-field{display:flex;flex-direction:column;gap:6px;font:500 .9rem Barlow,system-ui,sans-serif;color:var(--muted,#5f5a52)}.ds-input{font:600 1rem Barlow,system-ui,sans-serif;color:var(--ink,#1e1a16);background:var(--paper,#fff);border:1.5px solid var(--line-strong,#9c9488);border-radius:10px;padding:10px 12px;min-height:46px}.ds-input:focus-visible{outline:3px solid var(--focus,#1f5a3a);outline-offset:1px;border-color:var(--focus,#1f5a3a)}.ds-input[aria-invalid=true]{border-color:var(--red,#a8231b);background:var(--warn-bg,#fff1cc)}"
+    },
+    {
+      "name": "Interruttore",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Interruttore 48×28 che si accende in basilico.",
+      "html": "<label class=\"ds-switch\"><input type=\"checkbox\" role=\"switch\" checked> Maturazione in frigorifero</label>",
+      "css": ".ds-switch{display:flex;align-items:center;gap:12px;min-height:44px;font:600 1rem Barlow,system-ui,sans-serif;color:var(--ink,#1e1a16);cursor:pointer}.ds-switch input{appearance:none;-webkit-appearance:none;width:48px;height:28px;margin:0;border-radius:14px;background:var(--line-strong,#9c9488);position:relative;flex:none;cursor:pointer;transition:background-color .2s}.ds-switch input::after{content:\"\";position:absolute;left:4px;top:4px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .2s cubic-bezier(.2,.8,.2,1)}.ds-switch input:checked{background:var(--basil,#1f5a3a)}.ds-switch input:checked::after{transform:translateX(20px)}.ds-switch input:focus-visible{outline:3px solid var(--focus,#1f5a3a);outline-offset:2px}"
+    },
+    {
+      "name": "Avviso",
+      "kind": "custom",
+      "refersTo": "warning-note",
+      "description": "Unica famiglia per note, errori e avvisi.",
+      "html": "<p class=\"ds-note\">Con 6 h il frigo non fa in tempo: il programma è senza frigo.</p>",
+      "css": ".ds-note{margin:0;padding:10px 12px;border-radius:10px;background:var(--warn-bg,#fff1cc);color:var(--warn,#7a4d00);font:400 .92rem/1.5 Barlow,system-ui,sans-serif}"
+    }
+  ],
+  "narrative": {
+    "northStar": "L'insegna della pizzeria",
+    "overview": "**Creative North Star: \"L'insegna della pizzeria\"**\n\nL'app si legge come la facciata di una pizzeria napoletana: in alto un'insegna di smalto rosso pomodoro con un filo d'oro dipinto a mano, sotto una targa verde basilico che dice quando si inforna, e poi il listino scritto a mano con i grammi allineati a destra dietro una fila di puntini. Il carattere è popolare e artigiano ma la lettura resta da attrezzo da cucina: numeri grandi, tabellari, leggibili da un metro di distanza con le mani nella farina.\n\nLa densità è media e verticale, pensata per un telefono appoggiato al piano di lavoro. Il colore pieno è riservato a tre superfici dipinte (insegna, targa, riga della fase in corso) e al bottone principale; tutto il resto sta su smalto bianco e su un fondo grigio piastrella neutro, così il rosso e il verde restano un segnale e non una tinta di fondo. Il tema scuro sposta il fondo su un bruno fumo di forno e schiarisce gli accenti, ma l'insegna e la targa restano gli stessi smalti.\n\nIl mondo rifiuta in modo esplicito la pila di schede bianche su fondo crema con accento terracotta: il fondo non è mai crema e l'accento è un rosso pieno, non un mattone spento.",
+    "keyCharacteristics": [
+      "Insegna rossa con filo oro interno e una fascia d'ombra più scura alla base.",
+      "Scritta dipinta (Shrikhand) solo per titoli, targa e chiusura.",
+      "Numeri e orari in Barlow Condensed tabellare, grandi e pesanti.",
+      "Listino con puntini di guida tra nome e quantità.",
+      "Procedimento come lavagne per giorno; la fase in corso diventa una fascia verde basilico da bordo a bordo, con filo oro sopra e sotto.",
+      "Ogni fase porta un suo colore, usato solo nella targhetta dell'orario."
+    ],
+    "rules": [
+      {
+        "name": "La regola del fondo neutro",
+        "body": "Il fondo pagina e le superfici sono bianco smalto e grigio piastrella in chiaro, bruno fumo in scuro. Mai crema, avorio o carta ingiallita: il calore viene dagli smalti, non dal fondo.",
+        "section": "colors"
+      },
+      {
+        "name": "La regola delle tre superfici dipinte",
+        "body": "Il colore pieno copre solo insegna (rosso), targa e riga in corso (basilico) e il bottone dipinto. Una nuova superficie a colore pieno deve essere una di queste, non una quarta.",
+        "section": "colors"
+      },
+      {
+        "name": "La regola del colore di fase",
+        "body": "Il colore di una fase vive nella targhetta dell'orario, non sul testo né sullo sfondo della riga.",
+        "section": "colors"
+      },
+      {
+        "name": "La regola della scritta dipinta",
+        "body": "Shrikhand solo per il titolo dell'insegna, i titoli di sezione, l'ora nella targa, il bottone dipinto e la chiusura. Mai su testo corrente, etichette, numeri del listino o orari del procedimento.",
+        "section": "typography"
+      },
+      {
+        "name": "La regola delle cifre tabellari",
+        "body": "Ogni quantità e ogni orario è in Barlow Condensed con cifre tabellari, così le colonne restano allineate quando i valori cambiano.",
+        "section": "typography"
+      },
+      {
+        "name": "La regola delle unità minuscole",
+        "body": "Le unità restano minuscole e staccate dal numero (\"270 g\", \"1 kg\", \"°C\"), anche dentro le etichette in maiuscolo.",
+        "section": "typography"
+      },
+      {
+        "name": "La regola della pittura, non della luce",
+        "body": "Schede e lavagne non hanno ombra: bordo di 1px in riga e basta. L'ombra netta e sfalsata esiste solo come ombreggiatura dipinta della scritta sull'insegna, mai su riquadri.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** tenere il fondo pagina su grigio piastrella (#f4f4f2) e le superfici su smalto bianco; in scuro su bruno fumo (#171411 / #221e1a).",
+      "**Do** usare Shrikhand solo per insegna, titoli di sezione, ora della targa, bottone dipinto e chiusura.",
+      "**Do** scrivere ogni quantità e orario in Barlow Condensed con cifre tabellari, e le unità in minuscolo (\"g\", \"kg\", \"°C\", \"h\").",
+      "**Do** legare nome e valore di una riga di listino o di procedimento con i puntini di guida oro.",
+      "**Do** dare a ogni bersaglio toccabile almeno 44px di altezza (46px per i campi, 58px per il bottone dipinto, 64px per le righe del listino).",
+      "**Do** garantire un contrasto di almeno 4.5:1 per il testo, e 3:1 solo per il testo grande (dalla targhetta dell'orario in su), in entrambi i temi.",
+      "**Do** usare il filo oro come cornice delle superfici dipinte e come anello di fuoco sopra il rosso e il basilico.",
+      "**Do** mettere ogni avviso nella famiglia avviso (warn-umber su warn-wash), non in rosso."
+    ],
+    "donts": [
+      "**Don't** usare fondi crema, avorio o carta ingiallita, né un accento terracotta spento al posto del pomodoro.",
+      "**Don't** usare Shrikhand per testo corrente, etichette, numeri del listino o orari.",
+      "**Don't** scrivere le unità in maiuscolo o attaccate al numero.",
+      "**Don't** aggiungere una quarta superficie a colore pieno oltre a insegna, targa con riga in corso e bottone dipinto.",
+      "**Don't** dare ombra a schede e lavagne, né ombre nette sfalsate a riquadri: l'unica ombra netta è quella dipinta sotto la scritta dell'insegna.",
+      "**Don't** usare il colore di fase su testo o sfondi di riga: vive solo nella targhetta dell'orario e nel quadratino della targa.",
+      "**Don't** usare caratteri o emoji come icone: le icone sono SVG a tratto."
+    ]
+  }
+}

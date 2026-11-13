@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <title>Impasto pizza</title>
+  <!-- fondo insegna: smalto rosso con filo oro -->
+  <rect width="512" height="512" rx="112" fill="#a8231b"/>
+  <rect x="22" y="22" width="468" height="468" rx="94" fill="none" stroke="#d6a142" stroke-width="8"/>
+  <!-- cornicione -->
+  <circle cx="256" cy="262" r="186" fill="#e9b45c"/>
+  <circle cx="256" cy="262" r="186" fill="none" stroke="#c98a3a" stroke-width="6"/>
+  <!-- maculatura del forno a legna -->
+  <g fill="#5a2a12">
+    <ellipse cx="128" cy="170" rx="13" ry="9" transform="rotate(-35 128 170)"/>
+    <ellipse cx="350" cy="110" rx="11" ry="7" transform="rotate(20 350 110)"/>
+    <ellipse cx="418" cy="270" rx="10" ry="14"/>
+    <ellipse cx="300" cy="432" rx="13" ry="8" transform="rotate(-10 300 432)"/>
+    <ellipse cx="112" cy="330" rx="9" ry="12"/>
+    <ellipse cx="200" cy="96" rx="8" ry="6"/>
+    <ellipse cx="392" cy="378" rx="8" ry="10" transform="rotate(30 392 378)"/>
+  </g>
+  <!-- pomodoro -->
+  <circle cx="256" cy="262" r="146" fill="#c4301f"/>
+  <circle cx="256" cy="262" r="146" fill="none" stroke="#e05a3a" stroke-width="5" opacity=".55"/>
+  <!-- fior di latte -->
+  <g fill="#fffaf0">
+    <path d="M196 196c22-14 50-4 54 18 4 22-16 40-38 38-26-2-38-40-16-56z"/>
+    <path d="M300 250c24-10 52 4 52 28s-26 38-48 32c-24-6-30-50-4-60z"/>
+    <path d="M190 318c18-14 46-8 52 12 6 22-14 42-36 40-24-2-34-36-16-52z"/>
+  </g>
+  <!-- basilico -->
+  <g fill="#1f5a3a">
+    <path d="M262 172c18-26 52-30 62-24-4 20-30 44-62 24z"/>
+    <path d="M318 344c26-6 52 10 54 20-18 8-50 4-54-20z"/>
+    <path d="M150 252c4-26 28-40 40-38 2 18-14 40-40 38z"/>
+  </g>
+  <g fill="none" stroke="#2f7a50" stroke-width="3" stroke-linecap="round">
+    <path d="M266 170c16-8 34-14 52-20"/>
+    <path d="M322 348c14 4 30 10 44 14"/>
+    <path d="M154 250c10-10 20-20 32-32"/>
+  </g>
+</svg>
