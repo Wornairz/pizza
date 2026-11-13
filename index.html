@@ -164,11 +164,7 @@
   .go:active { transform: translateY(1px); box-shadow: 0 6px 14px -10px rgb(110 20 15 / .8); }
   .go:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   .error { margin: 0; padding: 10px 12px; border-radius: 10px; background: var(--warn-bg); color: var(--warn); font-weight: 600; }
-  .about { color: var(--muted); font-size: .92rem; }
-  .about summary { cursor: pointer; list-style: none; display: inline-flex; align-items: center; gap: 8px; min-height: 44px; color: var(--ink); font-weight: 600; }
-  .about summary::-webkit-details-marker { display: none; }
-  .about ul { margin: 0; padding-left: 20px; }
-  .about li { margin: 6px 0; }
+  .about { margin: 0; text-align: center; color: var(--muted); font-size: .88rem; }
   /* su telefono le colonne si sciolgono: ordine Che pizza, Quando, Quantità, Altre impostazioni */
   .col { display: contents; }
   #setup .card[aria-labelledby="h-pizza"] { order: 1; }
@@ -412,15 +408,7 @@
     <div class="span go-wrap">
       <button type="submit" class="go">Calcola l’impasto</button>
       <p class="error" id="setup-error" role="alert" hidden></p>
-      <details class="about">
-        <summary><svg class="chev" aria-hidden="true"><use href="#i-chev"/></svg>Come fa i calcoli</summary>
-        <ul>
-          <li>Simula minuto per minuto la temperatura dell’impasto (acqua, farina, impastatrice, ambiente, frigo) e quanto lavora il lievito a quella temperatura.</li>
-          <li>Il lievito è quello che porta l’impasto pronto esattamente all’infornata. Con il frigo: 2 ore prima e 4 fuori, e più ore di frigo vogliono dire meno lievito.</li>
-          <li>L’idratazione massima è la più bassa tra quella dello stile, dell’impastatrice e della farina (stimata dal W).</li>
-          <li>Le impostazioni restano salvate solo in questo browser.</li>
-        </ul>
-      </details>
+      <p class="about">Le impostazioni restano salvate su questo dispositivo.</p>
     </div>
   </form>
 </section>
@@ -807,15 +795,21 @@
 
     // listino delle dosi
     const I = M.INGREDIENTS, yeast = M.YEAST_TYPES[p.yeastType];
+    // acqua tenuta da parte all'inizio: la stessa quota del procedimento
+    const aside = p.machine === 'planetary' ? (p.hydration > M.MACHINES.planetary.maxHydration ? .15 : .05)
+      : p.machine === 'spiral' && (p.style === 'contemporary' || p.style === 'teglia') ? .1 : 0;
+    const fresh = r.percent.yeastFresh;
+    const yPct = Object.entries(M.YEAST_TYPES).map(([k, y]) => `${nf(fresh * y.factor, 2)}% ${k === 'fresh' ? 'di fresco' : y.short.toLowerCase()}`);
     const rows = [
       ['flour', p.flourLabel ? `Farina ${p.flourLabel.replace('Caputo ', '')}` : 'Farina', r.grams.flour, p.w ? `W${p.w} · ` + (p.w >= r.strength[0] - 20 && p.w <= r.strength[1] + 40 ? 'adatta' : `meglio W${r.strength[0]}–${r.strength[1]}`) : `100% · meglio W${r.strength[0]}–${r.strength[1]}`],
-      ['water', 'Acqua', r.grams.water, `${nf(p.hydration)}% · a ${nf(r.waterTemp)} °C`],
-      ['yeast', yeast.label, r.grams.yeast, `${nf(r.percent.yeast, 3)}%` + (p.yeastType === 'fresh' ? ` · oppure ${grams(r.grams.yeast / 2)} g secco` : '')],
-      ['salt', 'Sale', r.grams.salt, `${nf(p.salt)}%`],
-      ...(r.grams.oil > 0 ? [['oil', 'Olio', r.grams.oil, `${nf(p.oil)}%`]] : []),
+      ['water', 'Acqua', r.grams.water, [`${r.waterTemp <= 6 ? 'dal frigo, ' : ''}a ${nf(r.waterTemp)} °C`, aside ? `${grams(r.grams.water * aside)} g a parte` : ''].filter(Boolean).join(' · ')],
+      // in cucina si pesa al decimo; la percentuale serve solo a confrontare ricette, sta nella spiegazione
+      ['yeast', yeast.label, r.grams.yeast, '', `In percentuale sulla farina: ${yPct.join(', ')}. Serve per confrontare ricette.`, 1],
+      ['salt', 'Sale', r.grams.salt, { spiral: 'dopo 3–4 minuti di impasto', planetary: 'dopo il riposo di 10 minuti', hand: 'con la seconda metà della farina' }[p.machine]],
+      ...(r.grams.oil > 0 ? [['oil', 'Olio', r.grams.oil, 'a filo, a impasto già formato']] : []),
     ];
-    $('ingredients').innerHTML = rows.map(([k, name, g, meta]) => `
-      <details class="ing"><summary><span class="n">${esc(name)}<em>${esc(meta)}</em></span><span class="dots" aria-hidden="true"></span><span class="g">${grams(g)} g</span>${chev}</summary><p class="ing-why"><b>${esc(I[k].role)}.</b> ${esc(I[k].detail)}</p></details>`).join('');
+    $('ingredients').innerHTML = rows.map(([k, name, g, meta, extra, dec]) => `
+      <details class="ing"><summary><span class="n">${esc(name)}${meta ? `<em>${esc(meta)}</em>` : ''}</span><span class="dots" aria-hidden="true"></span><span class="g">${dec ? nf(g, g < 10 ? dec : 0) : grams(g)} g</span>${chev}</summary><p class="ing-why"><b>${esc(I[k].role)}.</b> ${esc(I[k].detail)}${extra ? ' ' + esc(extra) : ''}</p></details>`).join('');
     $('facts').innerHTML = [
       ['Impasto totale' + (r.dough.leftover > 0 ? ` (avanzo ${r.dough.leftover} g)` : ''), `${grams(r.dough.total)} g`],
       [measured != null ? 'Impasto misurato' : 'Fine impasto', `≈ ${nf(r.finalDoughTemp.used)} °C`],
