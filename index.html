@@ -99,7 +99,7 @@
   .chips input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; pointer-events: none; }
   .chips label:has(input:focus-visible) { outline: 3px solid var(--focus); outline-offset: 2px; }
   .row { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; }
-  .row + .row, .hint + .row { margin-top: 14px; }
+  .row + .row, .hint + .row, .span + .row { margin-top: 14px; }
   label.field { display: flex; flex-direction: column; gap: 6px; font: 500 .9rem var(--sans); color: var(--muted); min-width: 0; }
   input, select { font: 600 1rem var(--sans); color: var(--ink); background: var(--paper); border: 1.5px solid var(--line-strong); border-radius: 10px; padding: 10px 12px; min-height: 46px; width: 100%; min-width: 0; }
   input::placeholder { color: var(--muted); font-weight: 500; opacity: 1; }
@@ -111,6 +111,23 @@
   .hint.ok::before { content: ""; display: inline-block; width: 14px; height: 14px; margin-right: 6px; vertical-align: -2px; background: var(--basil); -webkit-mask: var(--i-check) center / contain no-repeat; mask: var(--i-check) center / contain no-repeat; }
   :root { --i-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M4.5 10.5l3.5 3.5 7.5-8' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); }
   .hint.over { color: var(--warn); font-weight: 500; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .hint.ok::before { background: #7fc49a; } }
+  :root[data-theme="dark"] .hint.ok::before { background: #7fc49a; }
+  /* le date su telefono una sotto l'altra: affiancate l'ora resta tagliata */
+  .row.dt { grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); }
+  /* il tempo totale come riga di listino; se non va, diventa un avviso con le correzioni pronte */
+  .span { margin-top: 12px; }
+  .span-line { display: flex; align-items: baseline; gap: 8px; font: 600 1rem var(--sans); color: var(--muted); }
+  .span-line .dots { transform: translateY(-5px); }
+  .span-line b { font: 800 1.35rem/1 var(--cond); font-variant-numeric: tabular-nums; color: var(--ink); white-space: nowrap; }
+  .span p { margin: 6px 0 0; font-size: .92rem; color: var(--muted); }
+  .span.warn { padding: 10px 12px 12px; border-radius: 10px; background: var(--warn-bg); }
+  .span.warn .span-line, .span.warn .span-line b, .span.warn p { color: var(--warn); }
+  .span.warn .dots { border-color: currentColor; opacity: .45; }
+  .span-fix { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .span-fix button { min-height: 44px; padding: 0 16px; border: 1.5px solid var(--warn); border-radius: 999px; background: var(--paper); color: var(--warn); font: 600 .95rem var(--sans); cursor: pointer; }
+  .span-fix button:hover { background: var(--warn); color: var(--paper); }
+  .span-fix button:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
   .switch { display: flex; align-items: center; gap: 12px; min-height: 44px; margin-top: 12px; font: 600 1rem var(--sans); cursor: pointer; }
   .switch input { appearance: none; -webkit-appearance: none; width: 48px; height: 28px; min-height: 0; padding: 0; border: 0; border-radius: 14px; background: var(--line-strong); position: relative; flex: none; cursor: pointer; transition: background-color .2s; }
   .switch input::after { content: ""; position: absolute; left: 4px; top: 4px; width: 20px; height: 20px; border-radius: 50%; background: #fff; transition: transform .2s cubic-bezier(.2, .8, .2, 1); }
@@ -269,7 +286,11 @@
   .measure label { flex: 1 1 200px; }
   .measure .ghost { min-height: 46px; padding: 0 14px; border-radius: 10px; border: 1.5px solid currentColor; background: transparent; color: inherit; font: 600 .95rem var(--sans); cursor: pointer; }
   .measure .replan { margin: 8px 0 0; font-size: .9rem; }
-  .end { margin: 24px 0 0; text-align: center; font-size: 2rem; color: var(--red); }
+  /* chiusura: dopo le due colonne, al centro della pagina, con un filo oro sopra */
+  .end { max-width: 1120px; margin: 8px auto 0; padding: 0 16px calc(56px + env(safe-area-inset-bottom)); text-align: center; font-size: 2rem; color: var(--red); }
+  .end::before { content: ""; display: block; width: 64px; height: 2px; margin: 0 auto 14px; background: var(--gold); }
+  #result .wrap { padding-bottom: 0; }
+  @media (min-width: 900px) { .end { font-size: 2.4rem; } }
   @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .end { color: #f08a72; } }
   :root[data-theme="dark"] .end { color: #f08a72; }
 
@@ -341,18 +362,21 @@
     <div class="col">
       <section class="card" aria-labelledby="h-when">
         <h2 class="script" id="h-when">Quando</h2>
-        <div class="row">
-          <label class="field">Infornata<input name="bakeAt" id="bakeAt" type="datetime-local" aria-describedby="time-hint"></label>
-          <label class="field">Inizio impasto<input name="start" id="start" type="datetime-local" aria-describedby="time-hint"></label>
+        <div class="row dt">
+          <label class="field">Infornata<input name="bakeAt" id="bakeAt" type="datetime-local" aria-describedby="span-text"></label>
+          <label class="field">Inizio impasto<input name="start" id="start" type="datetime-local" aria-describedby="span-text"></label>
         </div>
-        <p class="hint" id="time-hint" aria-live="polite"></p>
+        <div class="span" id="span">
+          <div class="span-line"><span>Dall’inizio all’infornata</span><span class="dots" aria-hidden="true"></span><b id="span-h"></b></div>
+          <p id="span-text" aria-live="polite"></p>
+          <div class="span-fix" id="span-fix" hidden></div>
+        </div>
         <div class="row">
           <label class="field">Ambiente (°C)<input name="room" type="number" min="10" max="35" step="0.5" value="22" inputmode="decimal"></label>
           <label class="field">Acqua (°C)<input name="waterTemp" type="number" min="0" max="40" step="0.5" value="4" inputmode="decimal"></label>
           <label class="field">Farina (°C)<input name="flourTemp" type="number" min="5" max="35" step="0.5" value="22" inputmode="decimal"></label>
         </div>
         <label class="switch"><input type="checkbox" name="fridge" role="switch" checked> Maturazione in frigorifero</label>
-        <p class="note" id="fridge-note" hidden></p>
         <div class="row" data-show="fridge" style="margin-top:8px">
           <label class="field">Frigo (°C)<input name="fridgeTemp" type="number" min="1" max="10" step="0.5" value="4" inputmode="decimal"></label>
         </div>
@@ -429,13 +453,13 @@
     <section class="proc" id="procedimento" aria-labelledby="h-proc">
       <h2 class="script" id="h-proc">Procedimento</h2>
       <div id="plan"></div>
-      <p class="end script">Buona pizza!</p>
     </section>
   </div>
+  <p class="end script">Buona pizza!</p>
 </section>
 
 <!-- il ?v= va cambiato quando cambia model.js, così il browser non usa una copia vecchia -->
-<script src="model.js?v=2026-11-13d"></script>
+<script src="model.js?v=2026-11-14"></script>
 <script>
 (() => {
   'use strict';
@@ -529,8 +553,6 @@
     const tooShort = Number.isFinite(hrs) && hrs < st.fridgeWindow[0];
     f.fridge.disabled = tooShort;
     f.fridge.checked = !tooShort && wantFridge;
-    $('fridge-note').hidden = !tooShort;
-    if (tooShort) $('fridge-note').textContent = `Con ${dur(hrs)} il frigo non fa in tempo (per ${st.label} servono almeno ${st.fridgeWindow[0]} ore): il programma è senza frigo.`;
 
     const show = {
       flourKg: !t && basis === 'flour', countIn: !t && basis === 'count', equal: !t && basis === 'flour',
@@ -565,18 +587,50 @@
       $('hydration-hint').textContent = hint;
     }
 
-    // tempi: ore nel range dello stile, e inizio nel passato
+    // tempi: una riga col totale, una frase, e se qualcosa non va le correzioni pronte
     const fr = f.fridge.checked, win = fr ? st.fridgeWindow : st.roomWindow;
-    const range = `per ${st.label} ${fr ? 'con' : 'senza'} frigo ${win[0]}–${win[1]} ore`;
-    let timeText, timeState = 'ok';
-    if (!Number.isFinite(hrs)) { timeText = `Dall’inizio all’infornata: ${range}.`; timeState = ''; }
-    else if (hrs < 2) { timeText = 'L’infornata deve essere almeno 2 ore dopo l’inizio.'; timeState = 'over'; }
-    else if (hrs < win[0] || hrs > win[1]) { timeText = `Hai ${dur(hrs)}, ma ${range.replace('per ', 'per la ')}.`; timeState = 'over'; }
-    else timeText = `${dur(hrs)} in tutto (${range}).`;
-    const startMs = new Date(f.start.value).getTime();
-    if (Number.isFinite(startMs) && startMs < Date.now() - 5 * MIN) { timeText += ` L’inizio è già passato (${clock(startMs)}): se impasti adesso, sposta l’ora di inizio.`; timeState = 'over'; }
-    $('time-hint').textContent = timeText;
-    $('time-hint').className = 'hint' + (timeState ? ' ' + timeState : '');
+    const bakeMs = new Date(f.bakeAt.value).getTime(), startMs = new Date(f.start.value).getTime();
+    const per = `per la ${st.label}`, fixes = [];
+    let text, warn = true;
+    if (!Number.isFinite(hrs)) { text = 'Scegli l’ora dell’infornata e quella d’inizio.'; warn = false; }
+    else if (startMs < Date.now() - 5 * MIN) {
+      text = `L’inizio (${clock(startMs)}) è già passato.`;
+      fixes.push(['Inizia adesso', 'start', Date.now()]);
+    }
+    else if (hrs < Math.max(2, win[0])) {
+      const need = Math.max(2, win[0]);
+      text = `Solo ${dur(hrs)}: ${per} ne servono almeno ${need} h.`;
+      if (bakeMs - need * H > Date.now()) fixes.push(['Inizia', 'start', bakeMs - need * H]);
+      fixes.push(['Inforna', 'bakeAt', startMs + need * H]);
+    }
+    else if (hrs > win[1]) {
+      text = `${dur(hrs)} sono troppe ${per} ${fr ? 'col' : 'senza'} frigo: al massimo ${win[1]} h.`;
+      if (!fr && hrs <= st.fridgeWindow[1]) { text += ' Col frigo invece vanno bene.'; fixes.push(['Usa il frigo', 'fridge']); }
+      fixes.push(['Inizia', 'start', bakeMs - win[1] * H], ['Inforna', 'bakeAt', startMs + win[1] * H]);
+    }
+    else {
+      warn = false;
+      text = fr ? `Tempo giusto ${per} col frigo (da ${win[0]} a ${win[1]} h in tutto): ${M.PRE_COLD_H} h fuori, poi frigo, poi ${M.OUT_H} h fuori prima di infornare.`
+        : tooShort && wantFridge ? `Con ${dur(hrs)} il frigo non fa in tempo: lievita tutto a temperatura ambiente. Il frigo si usa da ${st.fridgeWindow[0]} h in su.`
+        : `Tempo giusto ${per} senza frigo (da ${win[0]} a ${win[1]} h in tutto).`;
+    }
+    $('span-h').textContent = Number.isFinite(hrs) && hrs > 0 ? dur(hrs) : '–';
+    $('span-text').textContent = text;
+    $('span').classList.toggle('warn', warn);
+    $('span-fix').hidden = !fixes.length;
+    $('span-fix').innerHTML = fixes.map(([verb, field, ms], i) => {
+      if (field === 'fridge') return `<button type="button" data-i="${i}">${verb}</button>`;
+      const r = Math.round(ms / (5 * MIN)) * 5 * MIN;
+      fixes[i][2] = r;
+      return `<button type="button" data-i="${i}">${verb === 'Inizia adesso' ? verb : `${verb} ${dayKey(r) === dayKey(Date.now()) ? '' : esc(dayShort(r)) + ' '}alle ${clock(r)}`}</button>`;
+    }).join('');
+    $('span-fix').onclick = e => {
+      const fx = fixes[e.target.closest('button')?.dataset.i];
+      if (!fx) return;
+      if (fx[1] === 'fridge') wantFridge = true;
+      else f[fx[1]].value = local(new Date(fx[1] === 'start' && fx[0] === 'Inizia adesso' ? Math.ceil(Date.now() / (5 * MIN)) * 5 * MIN : fx[2]));
+      syncSetup();
+    };
 
     // farina adatta a questi tempi e a quest'acqua
     let flourText = '', flourState = '';
@@ -585,7 +639,7 @@
       if (fl.w < lo - 20) { flourText = `W${fl.w} è debole per ${dur(hrs)} ${al(h)}: consigliata W${lo}–${hi}.`; flourState = 'over'; }
       else if (fl.w > hi + 40) { flourText = `W${fl.w} è molto più forte del necessario per ${dur(hrs)} ${al(h)} (consigliata W${lo}–${hi}).`; flourState = 'over'; }
       else if (fl.w < lo || fl.w > hi) flourText = `W${fl.w} è un po’ ${fl.w < lo ? 'debole' : 'forte'} per ${dur(hrs)} ${al(h)} (consigliata W${lo}–${hi}), va bene lo stesso.`;
-      else { flourText = `W${fl.w} va bene per ${dur(hrs)} ${al(h)} (consigliata W${lo}–${hi}).`; flourState = 'ok'; }
+      else { flourText = `W${fl.w} adatta (consigliata W${lo}–${hi}).`; flourState = 'ok'; }
     }
     $('flour-hint').textContent = flourText; $('flour-hint').hidden = !flourText;
     $('flour-hint').className = 'hint' + (flourState ? ' ' + flourState : '');

@@ -613,7 +613,7 @@
     return base.map(w => Math.round((w + extra) / 10) * 10);
   }
 
-  const api = { STYLES, MACHINES, BAKE, FLOURS, flourMaxHydration, hydrationLimit, YEAST_TYPES, INGREDIENTS, PHASE_WHY, GROWTH, activity, defaults, calculate, equalSplit, flourStrength };
+  const api = { PRE_COLD_H, OUT_H, STYLES, MACHINES, BAKE, FLOURS, flourMaxHydration, hydrationLimit, YEAST_TYPES, INGREDIENTS, PHASE_WHY, GROWTH, activity, defaults, calculate, equalSplit, flourStrength };
   root.DoughModel = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this);
