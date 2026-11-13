@@ -109,9 +109,9 @@
   };
 
   const YEAST_TYPES = {
-    fresh: { label: 'Lievito di birra fresco', factor: 1 },
-    ady:   { label: 'Lievito secco attivo',    factor: 1 / 2 },
-    idy:   { label: 'Lievito secco istantaneo', factor: 1 / 3 },
+    fresh: { label: 'Lievito di birra fresco', short: 'Fresco', factor: 1 },
+    ady:   { label: 'Lievito secco attivo', short: 'Secco attivo', factor: 1 / 2 },
+    idy:   { label: 'Lievito secco istantaneo', short: 'Secco istantaneo', factor: 1 / 3 },
   };
 
   // Costante termica dei panetti (ore). Cassetta o mono-porzione cambiano i tempi di
