@@ -23,7 +23,7 @@
     --paper: #ffffff; --wash: #f4f4f2; --warn: #7a4d00; --warn-bg: #fff1cc;
     --focus: #1f5a3a;
     --ph-mix: #77796f; --ph-bulk: #d4701f; --ph-ball: #a8231b; --ph-preCold: #c99a12; --ph-cold: #3f86ad;
-    --ph-out: #5e8c3a; --ph-proof: #5e8c3a; --ph-bake: #6e140f;
+    --ph-out: #5e8c3a; --ph-proof: #5e8c3a; --ph-oven: #b8461b; --ph-bake: #6e140f;
     --script: Shrikhand, "Georgia", serif;
     --sans: Barlow, system-ui, -apple-system, "Segoe UI", sans-serif;
     --cond: "Barlow Condensed", "Arial Narrow", system-ui, sans-serif;
@@ -33,14 +33,14 @@
       --basil-soft: #1d2a22; --ink: #f1ece4; --muted: #b3aca1; --line: #36312b; --line-strong: #6f685e; --leader: #6d5f45;
       --paper: #221e1a; --wash: #171411; --warn: #f3c768; --warn-bg: #3a2e14; --focus: #d6a142;
       --ph-mix: #9a9c93; --ph-bulk: #ec8b45; --ph-ball: #e0634f; --ph-preCold: #e2bb4a; --ph-cold: #6fb0d0;
-      --ph-out: #8fbd6c; --ph-proof: #8fbd6c; --ph-bake: #e0634f;
+      --ph-out: #8fbd6c; --ph-proof: #8fbd6c; --ph-oven: #f0975a; --ph-bake: #e0634f;
     }
   }
   :root[data-theme="dark"] {
     --basil-soft: #1d2a22; --ink: #f1ece4; --muted: #b3aca1; --line: #36312b; --line-strong: #6f685e; --leader: #6d5f45;
     --paper: #221e1a; --wash: #171411; --warn: #f3c768; --warn-bg: #3a2e14; --focus: #d6a142;
     --ph-mix: #9a9c93; --ph-bulk: #ec8b45; --ph-ball: #e0634f; --ph-preCold: #e2bb4a; --ph-cold: #6fb0d0;
-    --ph-out: #8fbd6c; --ph-proof: #8fbd6c; --ph-bake: #e0634f;
+    --ph-out: #8fbd6c; --ph-proof: #8fbd6c; --ph-oven: #f0975a; --ph-bake: #e0634f;
   }
   * { box-sizing: border-box; }
   html { scroll-padding-top: 96px; -webkit-text-size-adjust: 100%; }
@@ -267,9 +267,6 @@
   .step li { margin: 5px 0; }
   .step .why { margin: 10px 0 4px; font-size: .93rem; color: var(--muted); }
   .step .why b { color: var(--ink); }
-  .step .oven { grid-column: 2 / -1; margin: 4px 0 0; font: 700 1rem var(--sans); color: var(--basil); }
-  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .step .oven { color: #8fc7a3; } }
-  :root[data-theme="dark"] .step .oven { color: #8fc7a3; }
   .step.done h3::after { content: " · fatto"; font: 600 .9rem var(--sans); color: var(--basil); }
   /* la fase in corso esce dalla lavagna: verde basilico con filo oro */
   /* la riga in corso diventa verde da bordo a bordo della lavagna, con il filo oro sopra e sotto */
@@ -289,7 +286,7 @@
   /* stati delle fasi: più forti delle varianti di tema */
   :root .step.done h3, :root .step.done .d { color: var(--muted); }
   :root .step.done .t { color: var(--muted); background: transparent; box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--c) 45%, transparent); }
-  :root .step.now .d, :root .step.now details > summary, :root .step.now .oven { color: var(--gold-soft); }
+  :root .step.now .d, :root .step.now details > summary { color: var(--gold-soft); }
   @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .step.done h3::after { color: #8fc7a3; } }
   :root[data-theme="dark"] .step.done h3::after { color: #8fc7a3; }
   .badge { display: inline-block; margin-left: 8px; padding: 1px 7px; border-radius: 6px; background: var(--gold); color: #1e1a16; font: 800 .75rem var(--cond); letter-spacing: .08em; vertical-align: 3px; }
@@ -751,10 +748,8 @@
   const notifyOn = () => saved && !!run?.notify && canNotify && Notification.permission === 'granted';
   function alertList() {
     if (!current) return [];
-    const out = current.phases.map(ph => ({ id: ph.id, at: ph.from, title: ph.id === 'bake' ? 'Inforna' : ph.title, body: ph.cue || '' }));
-    const bake = current.phases.find(ph => ph.id === 'bake');
-    if (bake) out.push({ id: 'oven', at: bake.from - OVEN_PREHEAT_MIN * MIN, title: 'Accendi il forno', body: `Si inforna alle ${clock(bake.from)}` });
-    return out.sort((a, b) => a.at - b.at);
+    return current.phases.map(ph => ({ id: ph.id, at: ph.from, title: ph.id === 'bake' ? 'Inforna' : ph.title, body: ph.cue || '' }))
+      .sort((a, b) => a.at - b.at);
   }
   function sendAlert(a) {
     const opts = { body: a.body, tag: 'pizza-' + a.id, renotify: true, icon: 'icon-192.png', badge: 'badge.png', vibrate: [200, 100, 200] };
@@ -861,9 +856,21 @@
         const next = phases.slice(i + 1).find(x => x.hours > BALL_MIN / 60);
         if (next) { ph.hours = BALL_MIN / 60; ph.to = ph.from + BALL_MIN * MIN; next.from += BALL_MIN * MIN; next.hours -= BALL_MIN / 60; }
       }
+      if (ph.id === 'bake') out.push(ovenStep(ph));
       out.push(ph);
     }
-    return out;
+    // il forno si accende durante l'appretto: in ordine d'orario
+    return out.sort((a, b) => a.from - b.from);
+  }
+  function ovenStep(bake) {
+    const at = bake.from - OVEN_PREHEAT_MIN * MIN;
+    return {
+      id: 'oven', title: 'Accendi il forno', hours: 0, from: at, to: at,
+      cue: `Al massimo, si inforna alle ${clock(bake.from)}`,
+      steps: ['Accendi il forno alla temperatura massima, con la pietra o l’acciaio già dentro se li usi.',
+        `Lascialo scaldare tutti i ${OVEN_PREHEAT_MIN} minuti anche se il termostato è già arrivato: la pietra ci mette di più.`],
+      why: '',
+    };
   }
 
   function render() {
@@ -951,7 +958,6 @@
           <span class="dots" aria-hidden="true"></span>
           <span class="d">${durText || '—'}</span>
           ${ph.cue ? `<p class="cue">${esc(ph.cue)}</p>` : ''}
-          ${ph.id === 'bake' ? `<p class="oven">Accendi il forno alle ${clock(ph.from - OVEN_PREHEAT_MIN * MIN)}, ${OVEN_PREHEAT_MIN} minuti prima.</p>` : ''}
           ${ph.id === 'mix' ? `<div class="measure"><div class="measure-row"><label class="field">Hai finito di impastare? Temperatura dell’impasto (°C)<input id="measured" type="number" min="10" max="40" step="0.1" inputmode="decimal" placeholder="stimata ${nf(r.finalDoughTemp.used)}" value="${measured ?? ''}" aria-describedby="replan"></label>${measured != null ? '<button type="button" class="ghost" id="clear-measured">Annulla</button>' : ''}</div><p class="replan" id="replan" aria-live="polite"></p></div>` : ''}
           <details${isNow ? ' open' : ''}><summary>${chev}Cosa fare e perché</summary>
             ${ph.steps.length ? `<ol>${ph.steps.map(s => `<li>${esc(s)}</li>`).join('')}</ol>` : ''}
