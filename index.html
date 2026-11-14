@@ -757,7 +757,7 @@
     return out.sort((a, b) => a.at - b.at);
   }
   function sendAlert(a) {
-    const opts = { body: a.body, tag: 'pizza-' + a.id, renotify: true, icon: 'icon-192.png', badge: 'icon-192.png', vibrate: [200, 100, 200] };
+    const opts = { body: a.body, tag: 'pizza-' + a.id, renotify: true, icon: 'icon-192.png', badge: 'badge.png', vibrate: [200, 100, 200] };
     const plain = () => { try { new Notification(a.title, opts); } catch {} };
     navigator.serviceWorker.getRegistration().then(reg => reg ? reg.showNotification(a.title, opts) : plain()).catch(plain);
   }
