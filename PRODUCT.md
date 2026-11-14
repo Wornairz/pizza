@@ -51,6 +51,7 @@ Il flusso ha due schermate: una per le impostazioni e una con il riassunto delle
 - **Modello**: simulazione termica minuto per minuto e attività del lievito tarata sul Calcolapizza. Col frigo i tempi sono fissi (2 h prima del frigo, 4 h fuori frigo) ed è il lievito ad adattarsi.
 - **Frigo e ore**: sotto il minimo di ore dello stile il frigo non è permesso: si disattiva da solo, con il motivo, e torna quando le ore bastano.
 - **Persistenza**: le impostazioni restano nel browser di chi usa la pagina (localStorage); non ci sono account né dati sul server.
+- **Impasto in corso**: col tasto «Salva» accanto a «Modifica» si salva l'impasto (orari esatti e temperatura misurata), uno solo alla volta e solo su questo dispositivo; da salvato si aggiorna da solo, e toccando «Salvato» si toglie. Riaprendo l'app si va dritti al procedimento; da «Modifica» si torna con «Riprendi». Scade 3 ore dopo l'infornata; salvarne un altro chiede conferma.
 - **Escluso**: niente scelta del contenitore dei panetti né del forno. Non cambiavano dosi né tempi in modo rilevante; la cottura è descritta per stile.
 - **Non si fa**: DoughMetry è solo un riferimento di confronto, mai da aggirare o copiare (né il paywall né i testi).
 

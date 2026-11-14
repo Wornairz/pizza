@@ -55,7 +55,7 @@
   .sign { position: relative; background: var(--red); color: #fff; border-bottom: 5px solid var(--gold); box-shadow: inset 0 -9px 0 var(--red-deep); }
   .sign::before { content: ""; position: absolute; inset: 7px 7px 16px; border: 1.5px solid rgb(214 161 66 / .75); border-radius: 12px; pointer-events: none; }
   .sign-in { position: relative; }
-  .sign-in { max-width: 1120px; margin: 0 auto; padding: max(18px, env(safe-area-inset-top)) 16px 26px; display: flex; align-items: flex-start; gap: 14px; }
+  .sign-in { max-width: 1120px; margin: 0 auto; padding: max(18px, env(safe-area-inset-top)) 16px 26px; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 14px; }
   .sign :focus-visible, .plaque :focus-visible, .step.now :focus-visible { outline-color: var(--gold); }
   .logo { width: 64px; height: 64px; flex: none; filter: drop-shadow(2px 2px 0 var(--red-deep)); }
   .sign h1 { margin: 0; font-size: 2rem; line-height: 1.2; text-shadow: 2px 2px 0 var(--red-deep); text-wrap: balance; }
@@ -64,7 +64,15 @@
   .sign .tagline { margin: 6px 0 0; font: 600 .95rem/1.35 var(--cond); letter-spacing: .07em; text-transform: uppercase; color: var(--gold-soft); }
   .sign .grow { flex: 1; min-width: 0; }
   .btn-sign { flex: none; border: 1.5px solid var(--gold-soft); color: #fff; background: transparent; border-radius: 999px; padding: 0 16px; min-height: 44px; font: 600 .95rem var(--sans); cursor: pointer; }
+  .sign-run { flex: 1 0 100%; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 12px; border-top: 1px solid rgb(214 161 66 / .45); }
+  .sign-run p { margin: 0; }
+  .sign-run small { display: block; font: 600 .8rem var(--cond); letter-spacing: .07em; text-transform: uppercase; color: var(--gold-soft); }
+  .sign-run b { font: 800 1.2rem/1.2 var(--cond); font-variant-numeric: tabular-nums; }
   .btn-sign:hover { background: rgb(255 255 255 / .1); }
+  .sign-actions { flex: none; display: flex; gap: 8px; }
+  .btn-sign[aria-pressed="true"] { background: var(--gold-soft); border-color: var(--gold-soft); color: var(--red-deep); }
+  .btn-sign[aria-pressed="true"]::before { content: ""; display: inline-block; width: 15px; height: 15px; margin-right: 6px; vertical-align: -2px; background: currentColor; -webkit-mask: var(--i-check) center / contain no-repeat; mask: var(--i-check) center / contain no-repeat; }
+  .btn-sign[aria-pressed="true"]:hover { background: #fff; border-color: #fff; }
 
   .wrap { max-width: 1120px; margin: 0 auto; padding: 18px 16px 56px; display: grid; gap: 16px; }
   .card { background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 18px; min-width: 0; }
@@ -291,6 +299,8 @@
   :root[data-theme="dark"] .end { color: #f08a72; }
 
   @media (max-width: 480px) {
+    .sign-actions { flex: 1 0 100%; }
+    .sign-actions .btn-sign { flex: 1; }
     .sign h1 { font-size: 1.75rem; }
     .logo { width: 56px; height: 56px; }
     .plaque .when { font-size: 1.1rem; }
@@ -319,6 +329,7 @@
   <header class="sign"><div class="sign-in">
     <img class="logo" src="favicon.svg" alt="" width="64" height="64">
     <div class="grow"><h1 class="script" id="setup-title" tabindex="-1">Pizza Pronta</h1><p class="tagline">Dosi e procedimento fino all’infornata</p></div>
+    <div class="sign-run" id="sign-run" hidden><p><small>Impasto in corso</small><b id="run-when"></b></p><button type="button" class="btn-sign" id="resume">Riprendi</button></div>
   </div></header>
 
   <form id="f" class="wrap" novalidate onsubmit="return false">
@@ -417,7 +428,7 @@
 <section id="result" hidden>
   <header class="sign"><div class="sign-in">
     <div class="grow"><h1 class="script" id="sum-title" tabindex="-1"></h1><p class="tagline" id="sum-meta"></p></div>
-    <button type="button" class="btn-sign" id="edit">Modifica</button>
+    <div class="sign-actions"><button type="button" class="btn-sign" id="save-run" aria-pressed="false">Salva</button><button type="button" class="btn-sign" id="edit">Modifica</button></div>
   </div></header>
 
   <div class="plaque-wrap"><div class="plaque-in">
@@ -452,7 +463,7 @@
 (() => {
   'use strict';
   const M = window.DoughModel, f = document.getElementById('f'), $ = id => document.getElementById(id);
-  const STORE = 'pizza-dough-calculator:v2';
+  const STORE = 'pizza-dough-calculator:v2', RUN_STORE = 'pizza-pronta:run:v1';
   const H = 3600e3, MIN = 60e3, OVEN_PREHEAT_MIN = 45, BALL_MIN = 10;
   const nf = (n, d = 1) => Number(n).toLocaleString('it-IT', { maximumFractionDigits: d });
   const grams = n => nf(n, n < 10 ? 2 : 0);
@@ -712,6 +723,32 @@
     } catch {}
   }
 
+  // Impasto in corso: uno solo, su questo dispositivo, finché non passano 3 ore dall'infornata.
+  let run = null, saved = false; // saved: l'impasto mostrato è quello salvato
+  function syncSaved() {
+    $('save-run').setAttribute('aria-pressed', String(saved));
+    $('save-run').textContent = saved ? 'Salvato' : 'Salva';
+    $('save-run').title = saved ? 'Salvato su questo dispositivo: tocca per toglierlo' : 'Salva l’impasto per riprenderlo quando riapri';
+  }
+  const runEnd = r => r.input.start + r.input.hours * H;
+  function saveRun() {
+    run = { v: 1, input, measured, savedAt: Date.now() };
+    try { localStorage.setItem(RUN_STORE, JSON.stringify(run)); } catch {}
+  }
+  function clearRun() {
+    run = null;
+    try { localStorage.removeItem(RUN_STORE); } catch {}
+  }
+  function loadRun() {
+    let r = null;
+    try { r = JSON.parse(localStorage.getItem(RUN_STORE)); } catch {}
+    const i = r?.input;
+    if (r?.v !== 1 || !i || !M.STYLES[i.style] || !M.MACHINES[i.machine] || !Number.isFinite(i.start) || !(i.hours >= 2)) { clearRun(); return null; }
+    if (Date.now() > runEnd(r) + 3 * H) { clearRun(); return null; }
+    if (!(Number.isFinite(r.measured) && r.measured >= 10 && r.measured <= 40)) r.measured = null;
+    return r;
+  }
+
   // Orari di default: si parte da quando vuoi infornare (domani alle 20:00) e si va all'indietro.
   function defaultTimes(duration) {
     const now = new Date(), bake = new Date(now);
@@ -888,15 +925,15 @@
     if (e.target.id !== 'measured') return;
     const v = parseFloat(e.target.value), pos = e.target.selectionStart;
     measured = Number.isFinite(v) && v >= 10 && v <= 40 ? v : null;
-    render();
+    render(); if (saved) saveRun();
     const el = $('measured'); el.value = e.target.value; el.focus();
     try { el.setSelectionRange(pos, pos); } catch {}
   });
-  $('plan').addEventListener('click', e => { if (e.target.id === 'clear-measured') { measured = null; render(); $('measured').focus(); } });
+  $('plan').addEventListener('click', e => { if (e.target.id === 'clear-measured') { measured = null; render(); if (saved) saveRun(); $('measured').focus(); } });
   $('late').addEventListener('click', e => {
     if (e.target.id !== 'no-fridge') return;
     wantFridge = false; f.fridge.checked = false; input = { ...input, fridge: false }; measured = null;
-    save(); syncSetup(); render(); $('sum-title').focus();
+    save(); if (saved) saveRun(); syncSetup(); render(); $('sum-title').focus();
   });
 
   // schermo acceso mentre si lavora l'impasto
@@ -916,6 +953,10 @@
   /* ---------- navigazione ---------- */
 
   function show(view) {
+    if (view === 'setup') {
+      $('sign-run').hidden = !run;
+      if (run) $('run-when').textContent = `Si inforna ${dayShort(runEnd(run))} alle ${clock(runEnd(run))}`;
+    }
     $('setup').hidden = view !== 'setup';
     $('result').hidden = view !== 'result';
     window.scrollTo({ top: 0 });
@@ -927,10 +968,20 @@
     const p = readInput(), err = validate(p);
     showError(err);
     if (err) return;
-    input = p; measured = null; lastChanged = '';
-    save(); render(); show('result');
+    input = p; measured = null; lastChanged = ''; saved = false;
+    save(); syncSaved(); render(); show('result');
   });
   $('edit').onclick = () => show('setup');
+  $('save-run').onclick = () => {
+    if (saved) { clearRun(); saved = false; syncSaved(); return; }
+    if (run && !confirm(`Hai già salvato un altro impasto (si inforna ${dayShort(runEnd(run))} alle ${clock(runEnd(run))}). Lo sostituisci con questo?`)) return;
+    saveRun(); saved = true; syncSaved();
+  };
+  $('resume').onclick = () => {
+    input = run.input; measured = run.measured; lastChanged = ''; saved = true; syncSaved();
+    f.start.value = local(new Date(input.start)); f.bakeAt.value = local(new Date(runEnd(run)));
+    syncSetup(); showError(null); render(); show('result');
+  };
   f.addEventListener('change', e => {
     if (e.target.name === 'style') applyStyleDefaults();
     if (e.target.name === 'fridge') wantFridge = e.target.checked;
@@ -943,7 +994,16 @@
   });
 
   restore();
+  run = loadRun();
+  if (run) {
+    f.start.value = local(new Date(run.input.start)); f.bakeAt.value = local(new Date(runEnd(run)));
+    input = run.input; measured = run.measured; saved = true; syncSaved();
+  }
   syncSetup();
+  if (run) {
+    try { render(); show('result'); }
+    catch { clearRun(); saved = false; syncSaved(); input = null; measured = null; defaultTimes(24); syncSetup(); }
+  }
 })();
 </script>
 </body>
