@@ -200,6 +200,17 @@
   .wake { flex: none; width: 44px; height: 44px; display: grid; place-items: center; border-radius: 10px; border: 1.5px solid rgb(255 255 255 / .45); background: transparent; color: #fff; cursor: pointer; }
   .wake svg { width: 22px; height: 22px; }
   .wake[aria-pressed="true"] { background: var(--gold); border-color: var(--gold); color: var(--ink); }
+  .proc-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 8px; }
+  .proc .proc-head h2 { margin: 0; }
+  .bell { flex: none; display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 16px 0 12px; border: 1.5px solid var(--bell); border-radius: 999px; background: transparent; color: var(--bell); font: 600 .95rem var(--sans); cursor: pointer; --bell: var(--basil); }
+  .bell svg { width: 20px; height: 20px; }
+  .bell:hover { background: var(--basil-soft); }
+  .bell:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+  .bell[aria-pressed="true"] { background: var(--basil); border-color: var(--basil); color: #fff; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .bell { --bell: #8fc7a3; } }
+  :root[data-theme="dark"] .bell { --bell: #8fc7a3; }
+  .notify-note { margin: 6px 0 0; font-size: .9rem; color: var(--muted); }
+  .notify-note.off { color: var(--warn); }
   .late-note { margin: 10px 0 0; display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; padding: 12px 14px; border-radius: 12px; background: var(--warn-bg); color: var(--warn); }
   .late-note p { margin: 0; flex: 1 1 240px; }
   .late-note button { min-height: 44px; padding: 0 14px; border: 0; border-radius: 999px; background: var(--warn); color: var(--warn-bg); font: 700 .92rem var(--sans); cursor: pointer; }
@@ -322,6 +333,7 @@
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="i-chev" viewBox="0 0 20 20"><path d="M5 7.5l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-screen" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M12 7.5v1.2M12 15.3v1.2M8.5 12h1.2M14.3 12h1.2M9.6 9.6l.8.8M13.6 13.6l.8.8M14.4 9.6l-.8.8M10.4 13.6l-.8.8"/></g></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16.5V11a6 6 0 0 1 12 0v5.5l1.5 1.5h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></g></symbol>
 </svg>
 
 <!-- SCHERMATA 1: impostazioni -->
@@ -450,7 +462,8 @@
       <p class="ice" id="ice-tip" hidden></p>
     </section>
     <section class="proc" id="procedimento" aria-labelledby="h-proc">
-      <h2 class="script" id="h-proc">Procedimento</h2>
+      <div class="proc-head"><h2 class="script" id="h-proc">Procedimento</h2><button type="button" class="bell" id="notify" aria-pressed="false" hidden><svg aria-hidden="true"><use href="#i-bell"/></svg><span id="notify-label">Avvisami</span></button></div>
+      <p class="notify-note" id="notify-note" role="status" hidden></p>
       <div id="plan"></div>
     </section>
   </div>
@@ -729,10 +742,64 @@
     $('save-run').setAttribute('aria-pressed', String(saved));
     $('save-run').textContent = saved ? 'Salvato' : 'Salva';
     $('save-run').title = saved ? 'Salvato su questo dispositivo: tocca per toglierlo' : 'Salva l’impasto per riprenderlo quando riapri';
+    syncNotify(); scheduleAlerts();
   }
+
+  // Avvisi dei passaggi: solo per l'impasto salvato e solo finché la pagina resta aperta (non c'è un server).
+  const canNotify = 'Notification' in window && 'serviceWorker' in navigator;
+  let alertTimer = 0, notifyNote = '';
+  const notifyOn = () => saved && !!run?.notify && canNotify && Notification.permission === 'granted';
+  function alertList() {
+    if (!current) return [];
+    const out = current.phases.map(ph => ({ id: ph.id, at: ph.from, title: ph.id === 'bake' ? 'Inforna' : ph.title, body: ph.cue || '' }));
+    const bake = current.phases.find(ph => ph.id === 'bake');
+    if (bake) out.push({ id: 'oven', at: bake.from - OVEN_PREHEAT_MIN * MIN, title: 'Accendi il forno', body: `Si inforna alle ${clock(bake.from)}` });
+    return out.sort((a, b) => a.at - b.at);
+  }
+  function sendAlert(a) {
+    const opts = { body: a.body, tag: 'pizza-' + a.id, renotify: true, icon: 'icon-192.png', badge: 'icon-192.png', vibrate: [200, 100, 200] };
+    const plain = () => { try { new Notification(a.title, opts); } catch {} };
+    navigator.serviceWorker.getRegistration().then(reg => reg ? reg.showNotification(a.title, opts) : plain()).catch(plain);
+  }
+  function scheduleAlerts() {
+    clearTimeout(alertTimer);
+    if (!notifyOn() || !current) return;
+    const t = Date.now(), list = alertList().filter(a => !run.sent.includes(a.id));
+    let changed = false;
+    for (const a of list.filter(a => a.at <= t)) {
+      if (t - a.at < 15 * MIN) sendAlert(a); // la pagina era sospesa da poco: avvisa lo stesso
+      run.sent.push(a.id); changed = true;
+    }
+    if (changed) saveRun();
+    const next = list.find(a => a.at > t);
+    if (next) alertTimer = setTimeout(scheduleAlerts, Math.min(next.at - t, 2 ** 31 - 1));
+  }
+  function syncNotify() {
+    const b = $('notify'), on = notifyOn();
+    b.hidden = !(saved && canNotify);
+    b.setAttribute('aria-pressed', String(on));
+    b.title = on ? 'Avvisi attivi: tocca per spegnerli' : 'Avvisami a ogni passaggio';
+    $('notify-label').textContent = on ? 'Avvisi attivi' : 'Avvisami';
+    const note = on ? ($('wake').getAttribute('aria-pressed') === 'true' || $('wake').hidden ? 'Un avviso a ogni passaggio, finché Pizza Pronta resta aperta.' : 'Un avviso a ogni passaggio, finché Pizza Pronta resta aperta: tieni lo schermo acceso col tasto in alto.') : b.hidden ? '' : notifyNote;
+    $('notify-note').textContent = note;
+    $('notify-note').hidden = !note;
+    $('notify-note').classList.toggle('off', !on);
+  }
+  $('notify').onclick = async () => {
+    notifyNote = '';
+    if (notifyOn()) { run.notify = false; saveRun(); syncNotify(); scheduleAlerts(); return; }
+    let perm = Notification.permission;
+    if (perm === 'default') { try { perm = await Notification.requestPermission(); } catch { perm = 'denied'; } }
+    if (perm !== 'granted') { notifyNote = 'Notifiche bloccate: attivale dalle impostazioni del browser per questo sito.'; syncNotify(); return; }
+    run.notify = true;
+    const t = Date.now();
+    run.sent = alertList().filter(a => a.at <= t).map(a => a.id); // quelli già passati non si avvisano
+    saveRun(); syncNotify(); scheduleAlerts();
+  };
   const runEnd = r => r.input.start + r.input.hours * H;
   function saveRun() {
-    run = { v: 1, input, measured, savedAt: Date.now() };
+    const keep = saved && run;
+    run = { v: 1, input, measured, savedAt: Date.now(), notify: keep ? !!run.notify : false, sent: keep ? run.sent || [] : [] };
     try { localStorage.setItem(RUN_STORE, JSON.stringify(run)); } catch {}
   }
   function clearRun() {
@@ -746,6 +813,7 @@
     if (r?.v !== 1 || !i || !M.STYLES[i.style] || !M.MACHINES[i.machine] || !Number.isFinite(i.start) || !(i.hours >= 2)) { clearRun(); return null; }
     if (Date.now() > runEnd(r) + 3 * H) { clearRun(); return null; }
     if (!(Number.isFinite(r.measured) && r.measured >= 10 && r.measured <= 40)) r.measured = null;
+    r.notify = r.notify === true; r.sent = Array.isArray(r.sent) ? r.sent : [];
     return r;
   }
 
@@ -900,7 +968,7 @@
     const sig = changes.join('|');
     if (sig === lastChanged) document.querySelectorAll('.step.changed').forEach(li => li.style.animation = 'none');
     lastChanged = sig;
-    updateNow();
+    updateNow(); scheduleAlerts(); syncNotify();
   }
 
   // la targa dice cosa succede adesso
@@ -939,6 +1007,7 @@
   // schermo acceso mentre si lavora l'impasto
   let lock = null;
   if ('wakeLock' in navigator) $('wake').hidden = false;
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
   async function setWake(on) {
     try {
       if (on) { lock = await navigator.wakeLock.request('screen'); lock.addEventListener('release', () => { if (!document.hidden) { lock = null; $('wake').setAttribute('aria-pressed', 'false'); } }); }
@@ -946,9 +1015,10 @@
     } catch { lock = null; }
     $('wake').setAttribute('aria-pressed', String(!!lock));
     $('wake').title = lock ? 'Schermo acceso: tocca per lasciarlo spegnere' : 'Tieni acceso lo schermo';
+    syncNotify();
   }
   $('wake').onclick = () => setWake(!lock);
-  document.addEventListener('visibilitychange', () => { if (!document.hidden && $('wake').getAttribute('aria-pressed') === 'true') setWake(true); });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && $('wake').getAttribute('aria-pressed') === 'true') setWake(true); if (!document.hidden) { syncNotify(); scheduleAlerts(); } });
 
   /* ---------- navigazione ---------- */
 
