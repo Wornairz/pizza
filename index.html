@@ -57,7 +57,7 @@
   .sign-in { position: relative; }
   .sign-in { max-width: 1120px; margin: 0 auto; padding: max(18px, env(safe-area-inset-top)) 16px 26px; display: flex; align-items: flex-start; gap: 14px; }
   .sign :focus-visible, .plaque :focus-visible, .step.now :focus-visible { outline-color: var(--gold); }
-  .logo { width: 54px; height: 54px; flex: none; border-radius: 14px; }
+  .logo { width: 64px; height: 64px; flex: none; filter: drop-shadow(2px 2px 0 var(--red-deep)); }
   .sign h1 { margin: 0; font-size: 2rem; line-height: 1.2; text-shadow: 2px 2px 0 var(--red-deep); text-wrap: balance; }
   .sign h1:focus { outline: none; }
   #sum-meta { text-transform: none; letter-spacing: .03em; font-size: 1.05rem; }
@@ -292,7 +292,7 @@
 
   @media (max-width: 480px) {
     .sign h1 { font-size: 1.75rem; }
-    .logo { width: 46px; height: 46px; border-radius: 12px; }
+    .logo { width: 56px; height: 56px; }
     .plaque .when { font-size: 1.1rem; }
     .plaque { gap: 8px; padding: 8px 8px 8px 12px; }
     .plaque .now { font-size: .95rem; }
@@ -302,7 +302,7 @@
     .sign h1 { font-size: 3.25rem; text-shadow: 3px 3px 0 var(--red-deep); }
     .sign .tagline { font-size: 1.05rem; }
     #sum-meta { font-size: 1.15rem; }
-    .logo { width: 76px; height: 76px; border-radius: 18px; }
+    .logo { width: 92px; height: 92px; filter: drop-shadow(3px 3px 0 var(--red-deep)); }
     .sign::before { inset: 10px 12px 20px; border-radius: 16px; }
   }
   @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
@@ -317,7 +317,7 @@
 <!-- SCHERMATA 1: impostazioni -->
 <section id="setup">
   <header class="sign"><div class="sign-in">
-    <img class="logo" src="icon.svg" alt="" width="54" height="54">
+    <img class="logo" src="favicon.svg" alt="" width="64" height="64">
     <div class="grow"><h1 class="script" id="setup-title" tabindex="-1">Pizza Pronta</h1><p class="tagline">Dosi e procedimento fino all’infornata</p></div>
   </div></header>
 
