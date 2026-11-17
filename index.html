@@ -1065,6 +1065,8 @@
   });
   f.addEventListener('input', e => {
     if (e.target.name === 'hydration') wantedHydration = +e.target.value;
+    // per le caselle "input" arriva prima di "change": la scelta va presa qui, o syncSetup la riaccende
+    if (e.target.name === 'fridge') wantFridge = e.target.checked;
     if (e.target.getAttribute('aria-invalid')) { e.target.removeAttribute('aria-invalid'); document.getElementById('err-' + e.target.name)?.remove(); $('setup-error').hidden = true; }
     syncSetup();
   });
