@@ -780,9 +780,13 @@
     $('notify-note').hidden = !note;
     $('notify-note').classList.toggle('off', !on);
   }
-  $('notify').onclick = async () => {
+  $('notify').onclick = () => {
+    if (notifyOn()) { notifyNote = ''; run.notify = false; saveRun(); syncNotify(); scheduleAlerts(); return; }
+    enableNotify();
+  };
+  // accende gli avvisi; il permesso si chiede solo qui, sempre dopo un tocco (Avvisami o Salva)
+  async function enableNotify() {
     notifyNote = '';
-    if (notifyOn()) { run.notify = false; saveRun(); syncNotify(); scheduleAlerts(); return; }
     let perm = Notification.permission;
     if (perm === 'default') { try { perm = await Notification.requestPermission(); } catch { perm = 'denied'; } }
     if (perm !== 'granted') { notifyNote = 'Notifiche bloccate: attivale dalle impostazioni del browser per questo sito.'; syncNotify(); return; }
@@ -790,7 +794,7 @@
     const t = Date.now();
     run.sent = alertList().filter(a => a.at <= t).map(a => a.id); // quelli già passati non si avvisano
     saveRun(); syncNotify(); scheduleAlerts();
-  };
+  }
   const runEnd = r => r.input.start + r.input.hours * H;
   function saveRun() {
     const keep = saved && run;
@@ -1052,6 +1056,7 @@
     if (saved) { clearRun(); saved = false; syncSaved(); return; }
     if (run && !confirm(`Hai già salvato un altro impasto (si inforna ${dayShort(runEnd(run))} alle ${clock(runEnd(run))}). Lo sostituisci con questo?`)) return;
     saveRun(); saved = true; syncSaved();
+    if (canNotify) enableNotify(); // avvisi accesi di default: si spengono dal tasto accanto a «Procedimento»
   };
   $('resume').onclick = () => {
     input = run.input; measured = run.measured; lastChanged = ''; saved = true; syncSaved();
